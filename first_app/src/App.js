@@ -5,8 +5,6 @@ import useInterval from "./useInterval";
 import "./App.css";
 import { FaEnvelope } from "react-icons/fa";
 import { ImDownload2 } from "react-icons/im";
-import Menulist from "./Menulist";
-
 const LiveTimeContainer = () => {
   const nowTime = moment().format("YYYY-MM-DD HH:mm:ss");
   const [seconds, setSeconds] = useState(nowTime);
