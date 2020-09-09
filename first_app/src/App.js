@@ -17,8 +17,9 @@ const LiveTimeContainer = () => {
   return <div className="NowTime">{seconds}</div>;
 };
 
-function handleClick(e) {
-  e.preventDefault();
+function handleClick(e, key) {
+  e.preventDefault();  
+  console.log(key);
   console.log("The link was clicked.");
 }
 function App() {
@@ -69,7 +70,7 @@ function App() {
       <div className="toolbar">toolbar..</div>
       <div className="menubar">
         <div className="menuz1">
-          <div className="menu menu1" onClick={handleClick}>
+          <div className="menu menu1" onClick={(e) => {handleClick(e, Menus[0].id)}}>
             <ImDownload2 className="icon" />
             Menu1
           </div>
