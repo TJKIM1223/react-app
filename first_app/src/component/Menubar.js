@@ -1,9 +1,10 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
+
+import Grid from "@material-ui/core/Grid";
 import MoveToInboxRoundedIcon from "@material-ui/icons/MoveToInboxRounded";
 import MailRoundedIcon from "@material-ui/icons/MailRounded";
 
@@ -56,13 +57,25 @@ const MenuObject2 = [
   },
 ];
 const useStyles = makeStyles((theme) => ({
+  Menubar: {
+    width: 240,
+    maxWidth: "100%",
+    border: "1px solid lightgray",
+    backgroundColor: theme.palette.background.paper,
+    "&::after": {
+      border: "1px solid lightgray",
+    },
+  },
   Menuz1: {
     border: "solid lightgray",
     borderWidth: "1px 0 0 0",
+    backgroundColor: theme.palette.background.paper,
   },
   Menuz2: {
     border: "solid lightgray",
     borderWidth: "1px 0 0 0",
+
+    backgroundColor: theme.palette.background.paper,
   },
 }));
 function Menuline({ menu }) {
@@ -76,21 +89,21 @@ function Menuline({ menu }) {
 function Menubar() {
   const classes = useStyles();
   return (
-    <div>
-      <List component="nav" aria-label="Menuz1" className={classes.Menuz1}>
+    <div className={classes.Menubar}>
+      <Grid className={classes.Menuz1}>
         <div>
           {MenuObject1.map((menu) => (
             <Menuline menu={menu} key={menu.id} />
           ))}
         </div>
-      </List>
-      <List component="nav" aria-label="Menuz2" className={classes.Menuz2}>
+      </Grid>
+      <Grid className={classes.Menuz2}>
         <div>
           {MenuObject2.map((menu) => (
             <Menuline menu={menu} key={menu.id} />
           ))}
         </div>
-      </List>
+      </Grid>
     </div>
   );
 }

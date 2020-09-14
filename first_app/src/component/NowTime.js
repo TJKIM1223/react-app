@@ -4,12 +4,9 @@ import "moment/locale/ko";
 import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles((theme) => ({
   NowTime: {
-    position: "fixed",
     textAlign: "right",
-    width: "100%",
-    bottom: 0,
-    height: 30,
     border: "1px solid lightgray",
+    height: 30,
     color: "gray",
   },
 }));
@@ -33,7 +30,7 @@ function useInterval(callback, delay) {
 }
 const LiveTimeContainer = () => {
   const classes = useStyles();
-  const nowTime = moment().format("YYYY-MM-DD HH:mm:ss");
+  const nowTime = moment().toString("YYYY-MM-DD HH:mm:ss");
   const [seconds, setSeconds] = useState(nowTime);
 
   // useInterval
@@ -43,4 +40,7 @@ const LiveTimeContainer = () => {
 
   return <div className={classes.NowTime}>{seconds}</div>;
 };
-export default LiveTimeContainer;
+function NowTime() {
+  return <LiveTimeContainer />;
+}
+export default NowTime;

@@ -1,0 +1,20 @@
+body {
+    height: 100%;
+}
+
+.content {
+    display: flex;
+    flex: 1;
+    height: calc(100vh - 78px);
+}
+
+.Menubar {
+    display: flex;
+    flex: none;
+}
+
+.Mainbox {
+    display: flex;
+    flex: 1;
+    overflow: auto;
+}

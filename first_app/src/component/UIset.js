@@ -2,37 +2,27 @@ import React from "react";
 import ToolbarFunc from "./Toolbar";
 import NowTime from "./NowTime";
 import Menubar from "./Menubar";
-import { makeStyles } from "@material-ui/core/styles";
-import { Toolbar } from "@material-ui/core";
-const useStyles = makeStyles((theme) => ({
-  Menubar: {
-    position: "fixed",
-    left: 0,
-    top: 0,
-    width: 240,
-    height: "100vh",
-    maxWidth: "100%",
-    border: "1px solid lightgray",
-    backgroundColor: theme.palette.background.paper,
-  },
-  ToolbarFunc: {
-    position: "fixed",
-  },
-  NowTime: {
-    position: "fixed",
-  },
-}));
+import CssBaseline from "@material-ui/core/CssBaseline";
+import "./UIset.css";
 function UIset() {
-  const classes = useStyles();
   return (
-    <React.Fragment>
-      <ToolbarFunc className={classes.ToolbarFunc} />
-      <NowTime className={classes.NowTime} />
-      <div className={classes.Menubar}>
-        <Toolbar />
-        <Menubar />
+    <div className="Wrap">
+      <CssBaseline />
+      <ToolbarFunc className="ToolbarFunc" />
+      <div className="content">
+        <Menubar className="Menubar" />
+        <div className="Mainbox">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+          aliquip ex ea commodo consequat. Duis aute irure dolor in
+          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+          culpa qui officia deserunt mollit anim id est laborum.
+        </div>
       </div>
-    </React.Fragment>
+      <NowTime className="NowTime" />
+    </div>
   );
 }
 
