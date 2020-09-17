@@ -30,7 +30,7 @@ function useInterval(callback, delay) {
 }
 const LiveTimeContainer = () => {
   const classes = useStyles();
-  const nowTime = moment().toString("YYYY-MM-DD HH:mm:ss");
+  const nowTime = moment().format("YYYY. M. D A h:mm:ss");
   const [seconds, setSeconds] = useState(nowTime);
 
   // useInterval
