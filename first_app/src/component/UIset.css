@@ -14,10 +14,19 @@ body {
   flex: 1;
 }
 
-
 .Mainbox {
   display: flex;
   flex: 1;
   overflow: auto;
   flex-direction: column;
+}
+
+.Maincont1 {
+  display: flex;
+  flex: 2;
+}
+
+.Maincont2 {
+  flex: 1;
+  background: lightgray;
 }
