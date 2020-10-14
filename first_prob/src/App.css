@@ -1,0 +1,92 @@
+.App1 {
+  display: grid;
+  width: 500px;
+  height: 500px;
+  margin: 10px;
+  border: gray 2px dotted;
+  grid-template-rows: repeat(5, 1fr);
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-areas:
+    "header header header header header"
+    "main main main main aside"
+    "main main main main aside"
+    "main main main main aside"
+    "footer footer footer footer footer";
+}
+
+.item {
+  border: 1px solid;
+}
+
+.App2 {
+  display: grid;
+  width: 500px;
+  height: 500px;
+  margin: 10px;
+  border: gray 2px dotted;
+  grid-template-rows: repeat(5, 1fr);
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-areas:
+    "header header header header header"
+    "main main main main aside"
+    "main main main main aside"
+    "main main main main aside"
+    "footer footer footer footer footer";
+}
+
+.App3 {
+  display: grid;
+  width: 500px;
+  height: 500px;
+  margin: 10px;
+  border: gray 2px dotted;
+  grid-template-rows: repeat(5, 1fr);
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-areas:
+    "header header header header header"
+    "main main main main aside"
+    "main main main main aside"
+    "main main main main aside"
+    "footer footer footer footer footer";
+}
+
+.two {
+  grid-column: span 2;
+}
+
+.header {
+  border-color: orangered;
+}
+
+header {
+  grid-area: header;
+}
+
+.main {
+  border-color: orange;
+}
+
+main {
+  grid-area: main;
+}
+
+.aside {
+  border-color: green;
+}
+
+aside {
+  grid-area: aside;
+}
+
+.footer {
+  border-color: blue;
+}
+
+footer {
+  grid-area: footer;
+}
+
+.square {
+  grid-column: span 2;
+  grid-row: span 2;
+}
