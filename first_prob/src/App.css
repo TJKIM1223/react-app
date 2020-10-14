@@ -1,4 +1,4 @@
-.App1 {
+.Appn {
   display: grid;
   width: 500px;
   height: 500px;
@@ -16,38 +16,6 @@
 
 .item {
   border: 1px solid;
-}
-
-.App2 {
-  display: grid;
-  width: 500px;
-  height: 500px;
-  margin: 10px;
-  border: gray 2px dotted;
-  grid-template-rows: repeat(5, 1fr);
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-areas:
-    "header header header header header"
-    "main main main main aside"
-    "main main main main aside"
-    "main main main main aside"
-    "footer footer footer footer footer";
-}
-
-.App3 {
-  display: grid;
-  width: 500px;
-  height: 500px;
-  margin: 10px;
-  border: gray 2px dotted;
-  grid-template-rows: repeat(5, 1fr);
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-areas:
-    "header header header header header"
-    "main main main main aside"
-    "main main main main aside"
-    "main main main main aside"
-    "footer footer footer footer footer";
 }
 
 .two {

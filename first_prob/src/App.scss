@@ -1,0 +1,82 @@
+.App {
+    display: grid;
+    $width: 500px;
+    $height: 500px;
+    $margin: 10px;
+    $border: gray 2px dotted;
+    $rows: repeat(5, 1fr);
+    $columns: repeat(5, 1fr);
+    $areas: "header header header header header"
+        "main main main main aside"
+        "main main main main aside"
+        "main main main main aside"
+        "footer footer footer footer footer";
+
+    &.Appn {
+        width: $width;
+        height: $height;
+        margin: $margin;
+        border: $border;
+        grid-template-rows: $rows;
+        grid-template-columns: $columns;
+        grid-template-areas: $areas;
+    }
+}
+
+.item {
+    display: grid;
+    justify-content: center;
+    align-content: center;
+    border: 1px solid;
+    $boxleng: span 2;
+    $header: orangered 1px solid;
+    $main: orange 1px solid;
+    $aside: green 1px solid;
+    $footer: blue 1px solid;
+
+    &.header {
+        border: $header;
+
+        &.two {
+            grid-column: $boxleng;
+        }
+
+        &.square {
+            grid-column: $boxleng;
+            grid-row: $boxleng;
+        }
+    }
+
+    &.main {
+        border: $main;
+
+        &.square {
+            grid-column: $boxleng;
+            grid-row: $boxleng;
+        }
+    }
+
+    &.aside {
+        border: $aside;
+    }
+
+    &.footer {
+        border: $footer;
+    }
+}
+
+header {
+    grid-area: header;
+}
+
+main {
+    grid-area: main;
+}
+
+aside {
+    grid-area: aside;
+}
+
+footer {
+    grid-area: footer;
+}

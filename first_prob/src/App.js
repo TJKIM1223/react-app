@@ -1,93 +1,94 @@
 import React from "react";
-import "./App.css";
+//import "./App.css"
+import "./App.scss";
 
 function App() {
   return (
-    <div>
-      <div className="App1">
-        <div class="item">1</div>
-        <div class="item">1</div>
-        <div class="item">1</div>
-        <div class="item">1</div>
-        <div class="item">1</div>
+    <div className="App">
+      <div className="App Appn">
+        <div className="item">1</div>
+        <div className="item">1</div>
+        <div className="item">1</div>
+        <div className="item">1</div>
+        <div className="item">1</div>
 
-        <div class="item">1</div>
-        <div class="item">1</div>
-        <div class="item">1</div>
-        <div class="item">1</div>
-        <div class="item">1</div>
+        <div className="item">1</div>
+        <div className="item">1</div>
+        <div className="item">1</div>
+        <div className="item">1</div>
+        <div className="item">1</div>
 
-        <div class="item">1</div>
-        <div class="item">1</div>
-        <div class="item">1</div>
-        <div class="item">1</div>
-        <div class="item">1</div>
+        <div className="item">1</div>
+        <div className="item">1</div>
+        <div className="item">1</div>
+        <div className="item">1</div>
+        <div className="item">1</div>
 
-        <div class="item">1</div>
-        <div class="item">1</div>
-        <div class="item">1</div>
-        <div class="item">1</div>
-        <div class="item">1</div>
+        <div className="item">1</div>
+        <div className="item">1</div>
+        <div className="item">1</div>
+        <div className="item">1</div>
+        <div className="item">1</div>
 
-        <div class="item">1</div>
-        <div class="item">1</div>
-        <div class="item">1</div>
-        <div class="item">1</div>
-        <div class="item">1</div>
+        <div className="item">1</div>
+        <div className="item">1</div>
+        <div className="item">1</div>
+        <div className="item">1</div>
+        <div className="item">1</div>
       </div>
-      <div className="App2">
-        <div class="item header two">2</div>
-        <div class="item header two">2</div>
-        <div class="item header one">1</div>
+      <div className="App Appn">
+        <div className="item header two">2</div>
+        <div className="item header two">2</div>
+        <div className="item header">1</div>
 
-        <div class="item main">1</div>
-        <div class="item main">1</div>
-        <div class="item main">1</div>
-        <div class="item main">1</div>
-        <div class="item aside">1</div>
+        <div className="item main">1</div>
+        <div className="item main">1</div>
+        <div className="item main">1</div>
+        <div className="item main">1</div>
+        <div className="item aside">1</div>
 
-        <div class="item main">1</div>
-        <div class="item main">1</div>
-        <div class="item main">1</div>
-        <div class="item main">1</div>
-        <div class="item aside">1</div>
+        <div className="item main">1</div>
+        <div className="item main">1</div>
+        <div className="item main">1</div>
+        <div className="item main">1</div>
+        <div className="item aside">1</div>
 
-        <div class="item main">1</div>
-        <div class="item main">1</div>
-        <div class="item main">1</div>
-        <div class="item main">1</div>
-        <div class="item aside">1</div>
+        <div className="item main">1</div>
+        <div className="item main">1</div>
+        <div className="item main">1</div>
+        <div className="item main">1</div>
+        <div className="item aside">1</div>
 
-        <div class="item footer">1</div>
-        <div class="item footer">1</div>
-        <div class="item footer">1</div>
-        <div class="item footer">1</div>
-        <div class="item footer">1</div>
+        <div className="item footer">1</div>
+        <div className="item footer">1</div>
+        <div className="item footer">1</div>
+        <div className="item footer">1</div>
+        <div className="item footer">1</div>
       </div>
-      <div className="App3">
-        <div class="item header square">2</div>
-        <div class="item header one">1</div>
-        <div class="item header one">1</div>
-        <div class="item header one">1</div>
+      <div className="App Appn">
+        <div className="item header square">2</div>
+        <div className="item header ">1</div>
+        <div className="item header ">1</div>
+        <div className="item header ">1</div>
 
-        <div class="item main">1</div>
-        <div class="item main">1</div>
-        <div class="item aside">1</div>
+        <div className="item main">1</div>
+        <div className="item main">1</div>
+        <div className="item aside">1</div>
 
-        <div class="item main square">2</div>
-        <div class="item main">1</div>
-        <div class="item main">1</div>
-        <div class="item aside">1</div>
+        <div className="item main square">2</div>
+        <div className="item main">1</div>
+        <div className="item main">1</div>
+        <div className="item aside">1</div>
 
-        <div class="item main">1</div>
-        <div class="item main">1</div>
-        <div class="item aside">1</div>
+        <div className="item main">1</div>
+        <div className="item main">1</div>
+        <div className="item aside">1</div>
 
-        <div class="item footer">1</div>
-        <div class="item footer">1</div>
-        <div class="item footer">1</div>
-        <div class="item footer">1</div>
-        <div class="item footer">1</div>
+        <div className="item footer">1</div>
+        <div className="item footer">1</div>
+        <div className="item footer">1</div>
+        <div className="item footer">1</div>
+        <div className="item footer">1</div>
       </div>
     </div>
   );
