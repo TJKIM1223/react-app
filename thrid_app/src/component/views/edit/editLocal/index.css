@@ -1,0 +1,20 @@
+.editLocal {
+    display: grid;
+    grid-template-columns: 241px 1fr;
+    height: 100vh;
+
+}
+
+.MainCont {
+    display: grid;
+    grid-template-rows: 45px 1fr ;
+}
+
+.Menubar {
+    width: 240px;
+}
+
+.contbox {
+    display: grid;
+    grid-template-columns: 5fr 1fr 5fr;
+}
