@@ -6,7 +6,6 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Grid from "@material-ui/core/Grid";
 import DesktopWindowsIcon from "@material-ui/icons/DesktopWindows";
 import MailRoundedIcon from "@material-ui/icons/MailRounded";
-import { Redirect } from "react-router-dom";
 
 const MenuStyles = {
   Menubar: {
@@ -23,9 +22,10 @@ const MenuStyles = {
     backgroundColor: "#fff",
   },
 };
+
 function Menuline(props) {
   return (
-    <ListItem button onClick={(e) => <Redirect to={props.menu.link} />}>
+    <ListItem button to={props.menu.link}>
       <ListItemIcon>{props.menu.icon}</ListItemIcon>
       <ListItemText primary={props.menu.name} />
     </ListItem>
@@ -46,6 +46,7 @@ class Menubar extends Component {
         id: 2,
         name: "Menu2",
         icon: <MailRoundedIcon />,
+        link: "/naver",
       },
     ];
   }

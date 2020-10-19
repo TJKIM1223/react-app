@@ -4,7 +4,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles((theme) => ({
   ToolbarFunc: {
-    backgroundColor: "#1976D2",
+    backgroundColor: "#3f51b5",
     color: "white",
   },
 }));

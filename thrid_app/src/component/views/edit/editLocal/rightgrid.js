@@ -1,5 +1,7 @@
 import React, { Component } from "react";
+import axios from "axios";
 import Table from "@material-ui/core/Table";
+import Button from "@material-ui/core/Button";
 import { withStyles } from "@material-ui/core/styles";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -13,12 +15,20 @@ const useStyles = () => ({
   },
   container: {
     margin: 10,
-    width: 500,
+    width: 750,
     height: 500,
+    whiteSpace: "nowrap",
   },
   selectedID: {
     fontSize: 22,
     margin: 10,
+  },
+  button: {
+    marginRight: 10,
+  },
+  buttonContainer: {
+    display: "flex",
+    flexDirection: "row-reverse",
   },
 });
 
@@ -131,6 +141,15 @@ class centerGrid extends Component {
               </TableBody>
             </Table>
           </TableContainer>
+          <div className={classes.buttonContainer}>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+            >
+              초기화
+            </Button>
+          </div>
         </div>
       </div>
     );

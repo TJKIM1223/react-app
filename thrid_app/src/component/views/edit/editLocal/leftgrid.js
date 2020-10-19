@@ -1,12 +1,18 @@
 import React, { Component } from "react";
+import axios from "axios";
 import Table from "@material-ui/core/Table";
 import { withStyles } from "@material-ui/core/styles";
+import Button from "@material-ui/core/Button";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
+import { connect } from "react-redux";
 import Paper from "@material-ui/core/Paper";
+import { readdata, deletedata, resetdata, copydata } from "../../../../action";
+
+const baseURL1 = "http://10.1.1.152:5000/";
 
 const useStyles = (theme) => ({
   top: {
@@ -14,12 +20,20 @@ const useStyles = (theme) => ({
   },
   container: {
     margin: 10,
-    width: 500,
+    width: 750,
     height: 500,
+    whiteSpace: "nowrap",
   },
   selectedID: {
     fontSize: 22,
     margin: 10,
+  },
+  button: {
+    marginRight: 10,
+  },
+  buttonContainer: {
+    display: "flex",
+    flexDirection: "row-reverse",
   },
 });
 
@@ -62,6 +76,41 @@ const rows = [
 ];
 
 class leftGrid extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      data: {},
+    };
+  }
+  componentDidMount() {
+    let param = {};
+    param.url = "/local";
+    param.method = "get";
+    param.data = {};
+    this.httpRequest(param);
+  }
+
+  httpRequest(param) {
+    let rst = {};
+    axios.defaults.baseURL = baseURL1;
+    let promise = axios({
+      method: param.method,
+      url: param.url,
+      data: param.data,
+    });
+    promise.then((response) => {
+      console.log("Success! ", param.data, response);
+      rst = response.data;
+      this.setState({
+        data: rst.data,
+      });
+      console.log("state: ", this.state.data);
+    });
+    promise.catch((response) => {
+      console.log("Error! ", response);
+    });
+  }
   render() {
     const { classes } = this.props;
     return (
@@ -138,10 +187,39 @@ class leftGrid extends Component {
               </TableBody>
             </Table>
           </TableContainer>
+          <div className={classes.buttonContainer}>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+            >
+              레코드 제거
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+            >
+              복사
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+            >
+              복구
+            </Button>
+          </div>
         </div>
       </div>
     );
   }
 }
+
+let mapDispatchtoProps = (dispatch) => ({
+  updatedata: () => dispatch(readdata()),
+});
+
+leftGrid = connect(undefined, mapDispatchtoProps)(leftGrid);
 
 export default withStyles(useStyles)(leftGrid);

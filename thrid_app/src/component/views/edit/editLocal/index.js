@@ -11,7 +11,9 @@ import "./index.css";
 const useStyles = () => ({
   arrow: {
     fontSize: 50,
-    justifyContent: "center",
+    color: "#3f51b5",
+    display: "table",
+    margin: "auto",
   },
 });
 
