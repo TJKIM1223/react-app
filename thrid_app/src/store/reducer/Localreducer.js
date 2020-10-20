@@ -6,22 +6,35 @@ import {
   RESET_DATA,
 } from "../../constants/actionTypes";
 
-const gridState = {
-  data: {},
-};
-const copygridState = {
-  copydata: {},
-};
+const gridState = [];
+const copygridState = [];
 // Localedit //
+//const LocaleditLeft = (state = gridState, action) => {
 const LocaleditLeft = (state = gridState, action) => {
-  console.log(state.data);
+  console.log("store data: ", gridState);
   switch (action.type) {
     case READ_DATA:
-      console.log("Read data: ", action);
-      return Object.assign({}, state, {
-        ...state,
-        data: action.promise.data,
-      });
+      for (let local of action.data) {
+        state.push({
+          ID: local.LOC_ID,
+          NAME: local.LOC_NM,
+          GRPID: local.GRP_ID,
+          LOCTYPE: local.LOC_TYPE,
+          LCTYPE: local.LC_TYPE,
+          LAMPTYPE: local.LAMP_TYPE,
+          NODEID: local.NODE_ID,
+          NLAT: local.NODELAT,
+          NLON: local.NODELON,
+        });
+      }
+      // for(let index=0; index<action.data.length; index++) {
+
+      // }
+      // return Object.assign({}, state, {
+      //   ...state,
+      //   data: action.data,
+      // });
+      return state;
 
     case DELETE_DATA:
       console.log("Delete Data");
@@ -35,13 +48,12 @@ const LocaleditLeft = (state = gridState, action) => {
 };
 
 const LocaleditRight = (state = copygridState, action) => {
-  console.log(state.copydata);
   switch (action.type) {
     case COPY_DATA:
       console.log("Copy Data");
       return Object.assign({}, state, {
         ...state,
-        copydata: gridState.data,
+        state: gridState,
       });
     case RESET_DATA:
       console.log("Copy Data");
@@ -49,7 +61,11 @@ const LocaleditRight = (state = copygridState, action) => {
         ...state,
         copydata: "",
       });
+    default:
+      return state;
   }
 };
 
-export default combineReducers({ LocaleditLeft, LocaleditRight });
+const LocaleditReducer = combineReducers({ LocaleditLeft, LocaleditRight });
+
+export default LocaleditReducer;

@@ -10,10 +10,9 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import { connect } from "react-redux";
 import Paper from "@material-ui/core/Paper";
-import { readdata, deletedata, resetdata, copydata } from "../../../../action";
+import { readdata, deletedata, copydata } from "../../../../action";
 
 const baseURL1 = "http://10.1.1.152:5000/";
-
 const useStyles = (theme) => ({
   top: {
     fontSize: 10,
@@ -25,7 +24,7 @@ const useStyles = (theme) => ({
     whiteSpace: "nowrap",
   },
   selectedID: {
-    fontSize: 22,
+    fontSize: 20,
     margin: 10,
   },
   button: {
@@ -60,27 +59,12 @@ function createData(
     NODELON,
   };
 }
-
-const rows = [
-  createData(
-    7,
-    "TEST7",
-    2,
-    0,
-    0,
-    0,
-    "2260002500",
-    "37.355020000161296 ",
-    "126.96917200053191 "
-  ),
-];
-
 class leftGrid extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      data: {},
+      data: [],
     };
   }
   componentDidMount() {
@@ -90,7 +74,6 @@ class leftGrid extends Component {
     param.data = {};
     this.httpRequest(param);
   }
-
   httpRequest(param) {
     let rst = {};
     axios.defaults.baseURL = baseURL1;
@@ -100,19 +83,53 @@ class leftGrid extends Component {
       data: param.data,
     });
     promise.then((response) => {
-      console.log("Success! ", param.data, response);
+      console.log("Success! ");
       rst = response.data;
+      console.log("data_fromserver", rst.data);
+      this.props.updatedata(rst.data);
       this.setState({
-        data: rst.data,
+        data: this.props.Leftdata,
       });
-      console.log("state: ", this.state.data);
+      console.log("data_fromserver_tostate: ", this.state.data);
     });
     promise.catch((response) => {
       console.log("Error! ", response);
     });
   }
+  onRecoverClick = () => {
+    this.setState({
+      data: this.props.Leftdata,
+    });
+    console.log("Recovery complete!");
+  };
+
+  onCopyClick = () => {
+    this.props.copySelectedData();
+    console.log("Copy complete!");
+  };
+
+  onDeleteClick = () => {
+    this.setState({
+      data: "",
+    });
+  };
   render() {
     const { classes } = this.props;
+    let rows = [];
+    for (let local of this.state.data) {
+      rows[local.ID] = createData(
+        local.ID,
+        local.NAME,
+        local.GRPID,
+        local.LOCTYPE,
+        local.LCTYPE,
+        local.LAMPTYPE,
+        local.NODEID,
+        local.NLAT,
+        local.NLON
+      );
+    }
+
     return (
       <div>
         <div className={classes.selectedID}>선택된 교차로 명</div>
@@ -191,6 +208,7 @@ class leftGrid extends Component {
             <Button
               variant="contained"
               color="primary"
+              onClick={this.onDeleteClick}
               className={classes.button}
             >
               레코드 제거
@@ -198,6 +216,7 @@ class leftGrid extends Component {
             <Button
               variant="contained"
               color="primary"
+              onClick={this.onCopyClick}
               className={classes.button}
             >
               복사
@@ -205,6 +224,7 @@ class leftGrid extends Component {
             <Button
               variant="contained"
               color="primary"
+              onClick={this.onRecoverClick}
               className={classes.button}
             >
               복구
@@ -216,10 +236,19 @@ class leftGrid extends Component {
   }
 }
 
+let mapStateToProps = (state) => {
+  console.log("state.left: ", state.LocaleditLeft);
+  return {
+    Leftdata: state.LocaleditLeft,
+  };
+};
+
 let mapDispatchtoProps = (dispatch) => ({
-  updatedata: () => dispatch(readdata()),
+  updatedata: (data) => dispatch(readdata(data)),
+  deleteSelectData: () => dispatch(deletedata()),
+  copySelectedData: () => dispatch(copydata()),
 });
 
-leftGrid = connect(undefined, mapDispatchtoProps)(leftGrid);
+leftGrid = connect(mapStateToProps, mapDispatchtoProps)(leftGrid);
 
 export default withStyles(useStyles)(leftGrid);

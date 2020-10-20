@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import axios from "axios";
 import Table from "@material-ui/core/Table";
+import { connect } from "react-redux";
 import Button from "@material-ui/core/Button";
 import { withStyles } from "@material-ui/core/styles";
 import TableBody from "@material-ui/core/TableBody";
@@ -9,6 +9,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
+import { resetdata } from "../../../../action/index";
 const useStyles = () => ({
   top: {
     fontSize: 10,
@@ -55,22 +56,53 @@ function createData(
     NODELON,
   };
 }
-const rows = [
-  createData(
-    7,
-    "TEST7",
-    2,
-    0,
-    0,
-    0,
-    "2260002500",
-    "37.355020000161296 ",
-    "126.96917200053191 "
-  ),
-];
+// const rows = [
+//   createData(
+//     7,
+//     "TEST7",
+//     2,
+//     0,
+//     0,
+//     0,
+//     "2260002500",
+//     "37.355020000161296 ",
+//     "126.96917200053191 "
+//   ),
+// ];
 class centerGrid extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      data: [],
+    };
+    console.log("check: ", this.state.data);
+  }
+  componentDidUpdate() {
+    this.setState({
+      data: this.props.Rightdata,
+    });
+  }
+  onResetClick = () => {
+    this.props.resetRightdata();
+    alert("복사된 항목 삭제!");
+  };
   render() {
     const { classes } = this.props;
+    let rows2 = [];
+    for (let local of this.state.data) {
+      rows2[local.ID] = createData(
+        local.ID,
+        local.NAME,
+        local.GRPID,
+        local.LOCTYPE,
+        local.LCTYPE,
+        local.LAMPTYPE,
+        local.NODEID,
+        local.NLAT,
+        local.NLON
+      );
+    }
     return (
       <div>
         <div className={classes.selectedID}>선택된 교차로 명</div>
@@ -107,7 +139,7 @@ class centerGrid extends Component {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
+                {rows2.map((row) => (
                   <TableRow key={row.LOC_ID}>
                     <TableCell component="th" scope="row">
                       {row.LOC_ID}
@@ -145,6 +177,7 @@ class centerGrid extends Component {
             <Button
               variant="contained"
               color="primary"
+              onClick={this.onResetClick}
               className={classes.button}
             >
               초기화
@@ -155,5 +188,18 @@ class centerGrid extends Component {
     );
   }
 }
+
+let mapStateToProps = (state) => {
+  console.log("state.right: ", state.LocaleditRight);
+  return {
+    Rightdata: state.LocaleditRight,
+  };
+};
+
+let mapDispatchtoProps = (dispatch) => ({
+  resetRightdata: () => dispatch(resetdata()),
+});
+
+centerGrid = connect(mapStateToProps, mapDispatchtoProps)(centerGrid);
 
 export default withStyles(useStyles)(centerGrid);

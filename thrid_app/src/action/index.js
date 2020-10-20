@@ -5,14 +5,10 @@ import {
   RESET_DATA,
 } from "../constants/actionTypes";
 // Localedit //
-export function readdata() {
+export function readdata(data) {
   return {
     type: READ_DATA,
-    promise: {
-      method: "get",
-      url: "/local",
-      data: {},
-    },
+    data: data,
   };
 }
 
