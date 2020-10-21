@@ -10,7 +10,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import { connect } from "react-redux";
 import Paper from "@material-ui/core/Paper";
-import { readdata, deletedata, copydata } from "../../../../action";
+import { readdata, deletedata } from "../../../../action";
 
 const baseURL1 = "http://10.1.1.152:5000/";
 const useStyles = (theme) => ({
@@ -60,13 +60,6 @@ function createData(
   };
 }
 class leftGrid extends Component {
-  componentDidMount() {
-    let param = {};
-    param.url = "/local";
-    param.method = "get";
-    param.data = {};
-    //this.httpRequest(param);
-  }
   httpRequest(param) {
     let rst = {};
     axios.defaults.baseURL = baseURL1;
@@ -78,7 +71,6 @@ class leftGrid extends Component {
     promise.then((response) => {
       console.log("Success! ");
       rst = response.data;
-      console.log("data_fromserver", rst.data);
       this.props.updatedata(rst.data);
     });
     promise.catch((response) => {
@@ -86,6 +78,7 @@ class leftGrid extends Component {
     });
   }
   onRecoverClick = () => {
+    this.props.deleteSelectData();
     let param = {};
     param.url = "/local";
     param.method = "get";
@@ -95,23 +88,20 @@ class leftGrid extends Component {
   };
 
   onCopyClick = () => {
-    this.props.copySelectedData();
-    console.log("Copy complete!");
+    this.props.copying(this.props.Leftdata);
   };
 
   onDeleteClick = () => {
     this.props.deleteSelectData();
     console.log("Delete complete!");
   };
+  onRowClickeveten = () => {
+    console.log("Click!");
+  };
   render() {
     const { classes } = this.props;
-    console.log("!!!!", this.props.Leftdata, this.props.Leftdata.length);
-    console.log("type : ", typeof this.props.Leftdata);
-    console.log("arr0 : ", this.props.Leftdata[0]);
-    console.log("arr1 : ", this.props.Leftdata["1"]);
     let rows = [];
     for (let local of this.props.Leftdata) {
-      console.log("local : ", local);
       rows.push(
         createData(
           local.ID,
@@ -126,7 +116,6 @@ class leftGrid extends Component {
         )
       );
     }
-    console.log("rows : ", rows);
     return (
       <div>
         <div className={classes.selectedID}>선택된 교차로 명</div>
@@ -168,7 +157,7 @@ class leftGrid extends Component {
               </TableHead>
               <TableBody>
                 {rows.map((row) => (
-                  <TableRow key={row.LOC_ID}>
+                  <TableRow key={row.LOC_ID} onClick={this.onRowClickeveten}>
                     <TableCell component="th" scope="row">
                       {row.LOC_ID}
                     </TableCell>
@@ -234,16 +223,14 @@ class leftGrid extends Component {
 }
 
 let mapStateToProps = (state) => {
-  console.log("state.left: ", state.LocaleditLeft);
   return {
-    Leftdata: state.LocaleditLeft.data,
+    Leftdata: state.data,
   };
 };
 
 let mapDispatchtoProps = (dispatch) => ({
   updatedata: (data) => dispatch(readdata(data)),
   deleteSelectData: () => dispatch(deletedata()),
-  copySelectedData: () => dispatch(copydata()),
 });
 
 leftGrid = connect(mapStateToProps, mapDispatchtoProps)(leftGrid);

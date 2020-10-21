@@ -5,9 +5,9 @@ import { createStore } from "redux";
 import { Provider } from "react-redux";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-import LocaleditReducer from "./store/reducer/Localreducer";
+import LocaleditLeft from "./store/reducer/Localreducer";
 
-const store = createStore(LocaleditReducer);
+const store = createStore(LocaleditLeft);
 const appElement = document.getElementById("root");
 
 ReactDOM.render(

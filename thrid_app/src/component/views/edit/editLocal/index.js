@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import axios from "axios";
 import ToolbarFunc from "./editLocalView/Toolbar";
 import { withStyles } from "@material-ui/core/styles";
 import Menubar from "./editLocalView/Menubar";
@@ -7,9 +8,9 @@ import NowTime from "./editLocalView/nowTIme";
 import LeftGrid from "./leftgrid.js";
 import RightGrid from "./rightgrid.js";
 import { connect } from "react-redux";
-import axios from "axios";
+import { readdata } from "../../../../action";
 import "./index.css";
-import { readdata, deletedata, copydata } from "../../../../action";
+
 const baseURL1 = "http://10.1.1.152:5000/";
 const useStyles = () => ({
   arrow: {
@@ -19,8 +20,14 @@ const useStyles = () => ({
     margin: "auto",
   },
 });
-
 class editLocal extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      copydata: [],
+    };
+  }
   componentDidMount() {
     let param = {};
     param.url = "/local";
@@ -39,14 +46,25 @@ class editLocal extends Component {
     promise.then((response) => {
       console.log("Success! ");
       rst = response.data;
-      console.log("data_fromserver", rst.data);
       this.props.updatedata(rst.data);
     });
     promise.catch((response) => {
       console.log("Error! ", response);
     });
   }
+
+  onCopyClick = (data) => {
+    this.setState({
+      copydata: data,
+    });
+  };
+  onDeleteClick = () => {
+    this.setState({
+      copydata: "",
+    });
+  };
   render() {
+    console.log("Check state : ", this.state.copydata);
     const { classes } = this.props;
     return (
       <div className="editLocal">
@@ -54,9 +72,12 @@ class editLocal extends Component {
         <div className="MainCont">
           <ToolbarFunc className="ToolbarFunc" />
           <div className="contbox">
-            <LeftGrid />
+            <LeftGrid copying={this.onCopyClick} />
             <ForwardIcon className={classes.arrow} />
-            <RightGrid />
+            <RightGrid
+              copystate={this.state.copydata}
+              deletestate={this.onDeleteClick}
+            />
           </div>
           <NowTime className="NowTime" />
         </div>
@@ -64,19 +85,10 @@ class editLocal extends Component {
     );
   }
 }
-let mapStateToProps = (state) => {
-  console.log("state.left1: ", state.LocaleditLeft);
-  return {
-    Leftdata: state.LocaleditLeft.data,
-  };
-};
 
 let mapDispatchtoProps = (dispatch) => ({
   updatedata: (data) => dispatch(readdata(data)),
-  deleteSelectData: () => dispatch(deletedata()),
-  copySelectedData: () => dispatch(copydata()),
 });
 
-editLocal = connect(mapStateToProps, mapDispatchtoProps)(editLocal);
-
+editLocal = connect(null, mapDispatchtoProps)(editLocal);
 export default withStyles(useStyles)(editLocal);
