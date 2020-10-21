@@ -56,19 +56,7 @@ function createData(
     NODELON,
   };
 }
-// const rows = [
-//   createData(
-//     7,
-//     "TEST7",
-//     2,
-//     0,
-//     0,
-//     0,
-//     "2260002500",
-//     "37.355020000161296 ",
-//     "126.96917200053191 "
-//   ),
-// ];
+
 class centerGrid extends Component {
   constructor(props) {
     super(props);
@@ -78,31 +66,44 @@ class centerGrid extends Component {
     };
     console.log("check: ", this.state.data);
   }
-  componentDidUpdate() {
-    this.setState({
-      data: this.props.Rightdata,
-    });
-  }
   onResetClick = () => {
     this.props.resetRightdata();
     alert("복사된 항목 삭제!");
   };
   render() {
     const { classes } = this.props;
-    let rows2 = [];
-    for (let local of this.state.data) {
-      rows2[local.ID] = createData(
-        local.ID,
-        local.NAME,
-        local.GRPID,
-        local.LOCTYPE,
-        local.LCTYPE,
-        local.LAMPTYPE,
-        local.NODEID,
-        local.NLAT,
-        local.NLON
-      );
+    let rows = [];
+    if (this.props.checkdata === "0") {
+      const rows = [
+        createData(
+          7,
+          "TEST7",
+          2,
+          0,
+          0,
+          0,
+          "2260002500",
+          "37.355020000161296 ",
+          "126.96917200053191 "
+        ),
+      ];
+    } else if (this.props.checkdata === "1") {
+      console.log("right type : ", typeof this.props.Rightdata);
+      for (let local of this.props.Rightdata) {
+        rows[local.ID] = createData(
+          local.ID,
+          local.NAME,
+          local.GRPID,
+          local.LOCTYPE,
+          local.LCTYPE,
+          local.LAMPTYPE,
+          local.NODEID,
+          local.NLAT,
+          local.NLON
+        );
+      }
     }
+
     return (
       <div>
         <div className={classes.selectedID}>선택된 교차로 명</div>
@@ -139,7 +140,7 @@ class centerGrid extends Component {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows2.map((row) => (
+                {rows.map((row) => (
                   <TableRow key={row.LOC_ID}>
                     <TableCell component="th" scope="row">
                       {row.LOC_ID}
@@ -192,7 +193,8 @@ class centerGrid extends Component {
 let mapStateToProps = (state) => {
   console.log("state.right: ", state.LocaleditRight);
   return {
-    Rightdata: state.LocaleditRight,
+    Rightdata: state.LocaleditRight.data,
+    checkdata: state.LocaleditRight.check,
   };
 };
 

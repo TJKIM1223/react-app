@@ -6,16 +6,20 @@ import {
   RESET_DATA,
 } from "../../constants/actionTypes";
 
-const gridState = [];
-const copygridState = [];
+const gridState = {
+  data: [],
+};
+const copygridState = {
+  data: [],
+  check: "0",
+};
 // Localedit //
 //const LocaleditLeft = (state = gridState, action) => {
 const LocaleditLeft = (state = gridState, action) => {
-  console.log("store data: ", gridState);
   switch (action.type) {
     case READ_DATA:
       for (let local of action.data) {
-        state.push({
+        state.data.push({
           ID: local.LOC_ID,
           NAME: local.LOC_NM,
           GRPID: local.GRP_ID,
@@ -27,6 +31,9 @@ const LocaleditLeft = (state = gridState, action) => {
           NLON: local.NODELON,
         });
       }
+
+      console.log("statedata : ", state.data);
+
       // for(let index=0; index<action.data.length; index++) {
 
       // }
@@ -40,7 +47,7 @@ const LocaleditLeft = (state = gridState, action) => {
       console.log("Delete Data");
       return Object.assign({}, state, {
         ...state,
-        data: "",
+        state: "",
       });
     default:
       return state;
@@ -53,13 +60,15 @@ const LocaleditRight = (state = copygridState, action) => {
       console.log("Copy Data");
       return Object.assign({}, state, {
         ...state,
-        state: gridState,
+        data: gridState.data,
+        check: "1",
       });
     case RESET_DATA:
       console.log("Copy Data");
       return Object.assign({}, state, {
         ...state,
-        copydata: "",
+        data: "",
+        check: "0",
       });
     default:
       return state;

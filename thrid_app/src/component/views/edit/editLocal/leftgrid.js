@@ -60,19 +60,12 @@ function createData(
   };
 }
 class leftGrid extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      data: [],
-    };
-  }
   componentDidMount() {
     let param = {};
     param.url = "/local";
     param.method = "get";
     param.data = {};
-    this.httpRequest(param);
+    //this.httpRequest(param);
   }
   httpRequest(param) {
     let rst = {};
@@ -87,19 +80,17 @@ class leftGrid extends Component {
       rst = response.data;
       console.log("data_fromserver", rst.data);
       this.props.updatedata(rst.data);
-      this.setState({
-        data: this.props.Leftdata,
-      });
-      console.log("data_fromserver_tostate: ", this.state.data);
     });
     promise.catch((response) => {
       console.log("Error! ", response);
     });
   }
   onRecoverClick = () => {
-    this.setState({
-      data: this.props.Leftdata,
-    });
+    let param = {};
+    param.url = "/local";
+    param.method = "get";
+    param.data = {};
+    this.httpRequest(param);
     console.log("Recovery complete!");
   };
 
@@ -109,27 +100,33 @@ class leftGrid extends Component {
   };
 
   onDeleteClick = () => {
-    this.setState({
-      data: "",
-    });
+    this.props.deleteSelectData();
+    console.log("Delete complete!");
   };
   render() {
     const { classes } = this.props;
+    console.log("!!!!", this.props.Leftdata, this.props.Leftdata.length);
+    console.log("type : ", typeof this.props.Leftdata);
+    console.log("arr0 : ", this.props.Leftdata[0]);
+    console.log("arr1 : ", this.props.Leftdata["1"]);
     let rows = [];
-    for (let local of this.state.data) {
-      rows[local.ID] = createData(
-        local.ID,
-        local.NAME,
-        local.GRPID,
-        local.LOCTYPE,
-        local.LCTYPE,
-        local.LAMPTYPE,
-        local.NODEID,
-        local.NLAT,
-        local.NLON
+    for (let local of this.props.Leftdata) {
+      console.log("local : ", local);
+      rows.push(
+        createData(
+          local.ID,
+          local.NAME,
+          local.GRPID,
+          local.LOCTYPE,
+          local.LCTYPE,
+          local.LAMPTYPE,
+          local.NODEID,
+          local.NLAT,
+          local.NLON
+        )
       );
     }
-
+    console.log("rows : ", rows);
     return (
       <div>
         <div className={classes.selectedID}>선택된 교차로 명</div>
@@ -239,7 +236,7 @@ class leftGrid extends Component {
 let mapStateToProps = (state) => {
   console.log("state.left: ", state.LocaleditLeft);
   return {
-    Leftdata: state.LocaleditLeft,
+    Leftdata: state.LocaleditLeft.data,
   };
 };
 
