@@ -63,16 +63,18 @@ class centerGrid extends Component {
     const { classes } = this.props;
     let rows = [];
     for (let local of this.props.copystate) {
-      rows[local.ID] = createData(
-        local.ID,
-        local.NAME,
-        local.GRPID,
-        local.LOCTYPE,
-        local.LCTYPE,
-        local.LAMPTYPE,
-        local.NODEID,
-        local.NLAT,
-        local.NLON
+      rows.push(
+        createData(
+          local.LOC_ID,
+          local.LOC_NM,
+          local.GRP_ID,
+          local.LOC_TYPE,
+          local.LC_TYPE,
+          local.LAMP_TYPE,
+          local.NODE_ID,
+          local.NODELAT,
+          local.NODELON
+        )
       );
     }
 

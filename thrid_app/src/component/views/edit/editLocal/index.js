@@ -64,7 +64,6 @@ class editLocal extends Component {
     });
   };
   render() {
-    console.log("Check state : ", this.state.copydata);
     const { classes } = this.props;
     return (
       <div className="editLocal">

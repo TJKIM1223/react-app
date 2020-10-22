@@ -10,6 +10,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import { connect } from "react-redux";
 import Paper from "@material-ui/core/Paper";
+import Checkbox from "@material-ui/core/Checkbox";
 import { readdata, deletedata } from "../../../../action";
 
 const baseURL1 = "http://10.1.1.152:5000/";
@@ -60,6 +61,13 @@ function createData(
   };
 }
 class leftGrid extends Component {
+  constructor(props) {
+    super(props);
+    this.onRowClickevent = this.onRowClickevent.bind(this);
+    this.state = {
+      selected: [],
+    };
+  }
   httpRequest(param) {
     let rst = {};
     axios.defaults.baseURL = baseURL1;
@@ -88,17 +96,27 @@ class leftGrid extends Component {
   };
 
   onCopyClick = () => {
-    this.props.copying(this.props.Leftdata);
+    this.props.copying(this.state.selected);
+    this.setState({
+      selected: [],
+      checked: [],
+    });
   };
 
   onDeleteClick = () => {
     this.props.deleteSelectData();
     console.log("Delete complete!");
   };
-  onRowClickeveten = () => {
-    console.log("Click!");
+  onRowClickevent = (data) => {
+    this.setState({
+      selected: this.state.selected.concat(data),
+    });
+  };
+  onCheckboxClick = (e) => {
+    console.log("!!", e.target.checked, e.target.value);
   };
   render() {
+    console.log("Check the state: ", this.state);
     const { classes } = this.props;
     let rows = [];
     for (let local of this.props.Leftdata) {
@@ -128,6 +146,7 @@ class leftGrid extends Component {
             >
               <TableHead>
                 <TableRow>
+                  <TableCell />
                   <TableCell>ID</TableCell>
                   <TableCell align="center" className={classes.top}>
                     Name
@@ -157,7 +176,17 @@ class leftGrid extends Component {
               </TableHead>
               <TableBody>
                 {rows.map((row) => (
-                  <TableRow key={row.LOC_ID} onClick={this.onRowClickeveten}>
+                  <TableRow
+                    key={row.LOC_ID}
+                    name={row.LOC_ID}
+                    onClick={() => this.onRowClickevent(row)}
+                  >
+                    <TableCell padding="checkbox">
+                      <Checkbox
+                        onChange={this.onCheckboxClick.bind(this)}
+                        value={row.LOC_ID}
+                      />
+                    </TableCell>
                     <TableCell component="th" scope="row">
                       {row.LOC_ID}
                     </TableCell>

@@ -1,7 +1,12 @@
-import { READ_DATA, DELETE_DATA } from "../../constants/actionTypes";
+import {
+  READ_DATA,
+  DELETE_DATA,
+  SELECT_DATA,
+} from "../../constants/actionTypes";
 
 const gridState = {
   data: [],
+  copydata: [],
 };
 
 // Localedit //
@@ -40,6 +45,12 @@ const LocaleditLeft = (state = gridState, action) => {
       return Object.assign({}, state, {
         ...state,
         data: [],
+      });
+    case SELECT_DATA:
+      console.log("SELECT Data");
+      return Object.assign({}, state, {
+        ...state,
+        data: action,
       });
     default:
       return state;
