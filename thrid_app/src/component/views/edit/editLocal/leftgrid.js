@@ -10,10 +10,9 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import { connect } from "react-redux";
 import Paper from "@material-ui/core/Paper";
-import Checkbox from "@material-ui/core/Checkbox";
 import { readdata, deletedata } from "../../../../action";
 
-const baseURL1 = "http://10.1.1.152:5000/";
+const baseURL1 = "http://10.1.1.153:5000/";
 const useStyles = (theme) => ({
   top: {
     fontSize: 10,
@@ -66,6 +65,7 @@ class leftGrid extends Component {
     this.onRowClickevent = this.onRowClickevent.bind(this);
     this.state = {
       selected: [],
+      copyarr: [],
     };
   }
   httpRequest(param) {
@@ -96,28 +96,35 @@ class leftGrid extends Component {
   };
 
   onCopyClick = () => {
-    this.props.copying(this.state.selected);
-    this.setState({
-      selected: [],
-      checked: [],
-    });
+    const arrlength = this.state.selected.length;
+    for (let i = 0; i < arrlength; i++) {
+      const imsi = this.state.selected[i] - 1;
+      console.log("imsi", imsi);
+      this.setState({
+        copyarr: this.state.copyarr.concat([
+          this.props.Leftdata.splice(imsi, 1),
+        ]),
+      });
+      console.log("check the loop");
+    }
   };
 
   onDeleteClick = () => {
-    this.props.deleteSelectData();
+    this.props.deleteSelectData(this.state.selected);
     console.log("Delete complete!");
   };
   onRowClickevent = (data) => {
-    this.setState({
-      selected: this.state.selected.concat(data),
-    });
-  };
-  onCheckboxClick = (e) => {
-    console.log("!!", e.target.checked, e.target.value);
+    const checkdata = this.state.selected.indexOf(data.LOC_ID, 0);
+    if (checkdata === -1) {
+      this.setState({
+        selected: this.state.selected.concat(data.LOC_ID),
+      });
+    } else if (checkdata > -1) {
+      alert("already exist!");
+    }
   };
   render() {
-    console.log("Check the state: ", this.state);
-    const { classes } = this.props;
+    console.log("Check the state: ", this.state.selected);
     let rows = [];
     for (let local of this.props.Leftdata) {
       rows.push(
@@ -134,6 +141,15 @@ class leftGrid extends Component {
         )
       );
     }
+    console.log("check the copy arr", this.state.copyarr);
+    //sorting table
+    rows = rows.sort(function (a, b) {
+      return a.LOC_ID - b.LOC_ID;
+    });
+    const { classes } = this.props;
+    //load data from store and generate table
+
+    console.log("!!!", this.props.Leftdata);
     return (
       <div>
         <div className={classes.selectedID}>선택된 교차로 명</div>
@@ -146,7 +162,6 @@ class leftGrid extends Component {
             >
               <TableHead>
                 <TableRow>
-                  <TableCell />
                   <TableCell>ID</TableCell>
                   <TableCell align="center" className={classes.top}>
                     Name
@@ -181,12 +196,6 @@ class leftGrid extends Component {
                     name={row.LOC_ID}
                     onClick={() => this.onRowClickevent(row)}
                   >
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        onChange={this.onCheckboxClick.bind(this)}
-                        value={row.LOC_ID}
-                      />
-                    </TableCell>
                     <TableCell component="th" scope="row">
                       {row.LOC_ID}
                     </TableCell>

@@ -11,7 +11,7 @@ import { connect } from "react-redux";
 import { readdata } from "../../../../action";
 import "./index.css";
 
-const baseURL1 = "http://10.1.1.152:5000/";
+const baseURL1 = "http://10.1.1.153:5000/";
 const useStyles = () => ({
   arrow: {
     fontSize: 50,

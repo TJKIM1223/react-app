@@ -11,6 +11,7 @@ const gridState = {
 
 // Localedit //
 //const LocaleditLeft = (state = gridState, action) => {
+
 const LocaleditLeft = (state = gridState, action) => {
   switch (action.type) {
     case READ_DATA:
@@ -28,6 +29,9 @@ const LocaleditLeft = (state = gridState, action) => {
           NLON: local.NODELON,
         });
       }
+      arrData = arrData.sort(function (a, b) {
+        return a.ID - b.ID;
+      });
       // for(let index=0; index<action.data.length; index++) {
 
       // }
@@ -44,7 +48,7 @@ const LocaleditLeft = (state = gridState, action) => {
       console.log("Delete Data");
       return Object.assign({}, state, {
         ...state,
-        data: [],
+        data: state.data.splice(action, 1),
       });
     case SELECT_DATA:
       console.log("SELECT Data");
