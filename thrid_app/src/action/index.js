@@ -6,9 +6,10 @@ export function readdata(data) {
     data: data,
   };
 }
-export function deletedata() {
+export function deletedata(data) {
   return {
     type: DELETE_DATA,
+    data: data,
   };
 }
 

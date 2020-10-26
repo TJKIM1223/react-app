@@ -7,6 +7,7 @@ import {
 const gridState = {
   data: [],
   copydata: [],
+  dump: [],
 };
 
 // Localedit //
@@ -46,10 +47,13 @@ const LocaleditLeft = (state = gridState, action) => {
 
     case DELETE_DATA:
       console.log("Delete Data");
-      return Object.assign({}, state, {
+      const datalength = action.data.length;
+      for (let i = 0; i < datalength; i++) {
+        state.data = state.data.filter((item) => item.ID !== action.data[i]);
+      }
+      return {
         ...state,
-        data: state.data.splice(action, 1),
-      });
+      };
     case SELECT_DATA:
       console.log("SELECT Data");
       return Object.assign({}, state, {

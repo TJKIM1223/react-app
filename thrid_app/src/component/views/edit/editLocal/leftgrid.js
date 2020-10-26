@@ -62,10 +62,10 @@ function createData(
 class leftGrid extends Component {
   constructor(props) {
     super(props);
-    this.onRowClickevent = this.onRowClickevent.bind(this);
     this.state = {
       selected: [],
       copyarr: [],
+      selectedName: [],
     };
   }
   httpRequest(param) {
@@ -86,7 +86,6 @@ class leftGrid extends Component {
     });
   }
   onRecoverClick = () => {
-    this.props.deleteSelectData();
     let param = {};
     param.url = "/local";
     param.method = "get";
@@ -97,30 +96,43 @@ class leftGrid extends Component {
 
   onCopyClick = () => {
     const arrlength = this.state.selected.length;
+    let copyimsi = [];
     for (let i = 0; i < arrlength; i++) {
       const imsi = this.state.selected[i] - 1;
-      console.log("imsi", imsi);
-      this.setState({
-        copyarr: this.state.copyarr.concat([
-          this.props.Leftdata.splice(imsi, 1),
-        ]),
-      });
+      copyimsi[i] = this.props.Leftdata[imsi];
       console.log("check the loop");
     }
+    this.props.copying(copyimsi);
+    this.setState({
+      selected: [],
+      selectedName: [],
+    });
   };
 
   onDeleteClick = () => {
     this.props.deleteSelectData(this.state.selected);
     console.log("Delete complete!");
+    this.setState({
+      selected: [],
+      selectedName: [],
+    });
   };
   onRowClickevent = (data) => {
     const checkdata = this.state.selected.indexOf(data.LOC_ID, 0);
     if (checkdata === -1) {
       this.setState({
         selected: this.state.selected.concat(data.LOC_ID),
+        selectedName: this.state.selectedName.concat(data.LOC_NM),
       });
     } else if (checkdata > -1) {
-      alert("already exist!");
+      this.setState({
+        selected: this.state.selected.filter(
+          (item) => item.LOC_ID !== data.LOC_ID
+        ),
+        selectedName: this.state.selectedName.filter(
+          (item) => item.LOC_NM !== data.LOC_NM
+        ),
+      });
     }
   };
   render() {
@@ -141,7 +153,6 @@ class leftGrid extends Component {
         )
       );
     }
-    console.log("check the copy arr", this.state.copyarr);
     //sorting table
     rows = rows.sort(function (a, b) {
       return a.LOC_ID - b.LOC_ID;
@@ -149,10 +160,14 @@ class leftGrid extends Component {
     const { classes } = this.props;
     //load data from store and generate table
 
-    console.log("!!!", this.props.Leftdata);
+    console.log("store data: ", this.props.Leftdata);
+    console.log("check the name: ", this.state.selectedName);
+
     return (
       <div>
-        <div className={classes.selectedID}>선택된 교차로 명</div>
+        <div className={classes.selectedID}>
+          선택된 교차로 명: {this.state.selectedName + " "}
+        </div>
         <div className={classes.container}>
           <TableContainer component={Paper}>
             <Table
@@ -268,7 +283,7 @@ let mapStateToProps = (state) => {
 
 let mapDispatchtoProps = (dispatch) => ({
   updatedata: (data) => dispatch(readdata(data)),
-  deleteSelectData: () => dispatch(deletedata()),
+  deleteSelectData: (data) => dispatch(deletedata(data)),
 });
 
 leftGrid = connect(mapStateToProps, mapDispatchtoProps)(leftGrid);

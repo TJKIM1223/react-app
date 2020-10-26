@@ -65,22 +65,22 @@ class centerGrid extends Component {
     for (let local of this.props.copystate) {
       rows.push(
         createData(
-          local.LOC_ID,
-          local.LOC_NM,
-          local.GRP_ID,
-          local.LOC_TYPE,
-          local.LC_TYPE,
-          local.LAMP_TYPE,
-          local.NODE_ID,
-          local.NODELAT,
-          local.NODELON
+          local.ID,
+          local.NAME,
+          local.GRPID,
+          local.LOCTYPE,
+          local.LCTYPE,
+          local.LAMPTYPE,
+          local.NODEID,
+          local.NLAT,
+          local.NLON
         )
       );
     }
 
     return (
       <div>
-        <div className={classes.selectedID}>선택된 교차로 명</div>
+        <div className={classes.selectedID}>복사된 교차로 명</div>
         <div className={classes.container}>
           <TableContainer component={Paper}>
             <Table size="small" aria-label="a dense table">
