@@ -115,7 +115,7 @@ class centerGrid extends Component {
               </TableHead>
               <TableBody>
                 {rows.map((row) => (
-                  <TableRow key={row.LOC_ID}>
+                  <TableRow key={row.LOC_ID} hover>
                     <TableCell component="th" scope="row">
                       {row.LOC_ID}
                     </TableCell>

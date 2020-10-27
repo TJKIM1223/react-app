@@ -59,12 +59,13 @@ function createData(
     NODELON,
   };
 }
+
 class leftGrid extends Component {
   constructor(props) {
     super(props);
     this.state = {
       selected: [],
-      copyarr: [],
+      isChecked: [],
       selectedName: [],
     };
   }
@@ -98,9 +99,9 @@ class leftGrid extends Component {
     const arrlength = this.state.selected.length;
     let copyimsi = [];
     for (let i = 0; i < arrlength; i++) {
-      const imsi = this.state.selected[i] - 1;
-      copyimsi[i] = this.props.Leftdata[imsi];
-      console.log("check the loop");
+      copyimsi[i] = this.props.Leftdata.find(
+        (data) => data.ID === this.state.selected[i]
+      );
     }
     this.props.copying(copyimsi);
     this.setState({
@@ -126,17 +127,14 @@ class leftGrid extends Component {
       });
     } else if (checkdata > -1) {
       this.setState({
-        selected: this.state.selected.filter(
-          (item) => item.LOC_ID !== data.LOC_ID
-        ),
+        selected: this.state.selected.filter((item) => item !== data.LOC_ID),
         selectedName: this.state.selectedName.filter(
-          (item) => item.LOC_NM !== data.LOC_NM
+          (item) => item !== data.LOC_NM
         ),
       });
     }
   };
   render() {
-    console.log("Check the state: ", this.state.selected);
     let rows = [];
     for (let local of this.props.Leftdata) {
       rows.push(
@@ -158,11 +156,7 @@ class leftGrid extends Component {
       return a.LOC_ID - b.LOC_ID;
     });
     const { classes } = this.props;
-    //load data from store and generate table
-
-    console.log("store data: ", this.props.Leftdata);
-    console.log("check the name: ", this.state.selectedName);
-
+    const rowLength = this.props.Leftdata.length;
     return (
       <div>
         <div className={classes.selectedID}>
@@ -207,6 +201,7 @@ class leftGrid extends Component {
               <TableBody>
                 {rows.map((row) => (
                   <TableRow
+                    hover
                     key={row.LOC_ID}
                     name={row.LOC_ID}
                     onClick={() => this.onRowClickevent(row)}

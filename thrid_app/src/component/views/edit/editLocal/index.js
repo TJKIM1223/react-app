@@ -57,7 +57,6 @@ class editLocal extends Component {
     this.setState({
       copydata: data,
     });
-    console.log("data: ", data);
   };
   onDeleteClick = () => {
     this.setState({
@@ -65,7 +64,6 @@ class editLocal extends Component {
     });
   };
   render() {
-    console.log("!!!", this.state.copydata);
     const { classes } = this.props;
     return (
       <div className="editLocal">
