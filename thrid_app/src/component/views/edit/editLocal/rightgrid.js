@@ -56,9 +56,12 @@ function createData(
 }
 
 class centerGrid extends Component {
-  onResetClick = () => {
-    alert("복사된 항목 삭제!");
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      copystates: [],
+    };
+  }
   render() {
     const { classes } = this.props;
     let rows = [];
@@ -78,6 +81,9 @@ class centerGrid extends Component {
       );
     }
 
+    rows = rows.sort(function (a, b) {
+      return a.LOC_ID - b.LOC_ID;
+    });
     return (
       <div>
         <div className={classes.selectedID}>복사된 교차로 명</div>

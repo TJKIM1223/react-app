@@ -34,6 +34,12 @@ const useStyles = (theme) => ({
     display: "flex",
     flexDirection: "row-reverse",
   },
+  tableRow: {
+    "&$selected, &$selected:hover": {
+      backgroundColor: "#f5f5f5",
+    },
+  },
+  selected: {},
 });
 
 function createData(
@@ -113,6 +119,11 @@ class leftGrid extends Component {
   onDeleteClick = () => {
     this.props.deleteSelectData(this.state.selected);
     console.log("Delete complete!");
+    if (this.state.selected.length === 0) {
+      alert("선택된 교차로가 없습니다!");
+    } else if (this.state.selected.length > 0) {
+      alert("선택한 교차로를 삭제했습니다.");
+    }
     this.setState({
       selected: [],
       selectedName: [],
@@ -156,7 +167,6 @@ class leftGrid extends Component {
       return a.LOC_ID - b.LOC_ID;
     });
     const { classes } = this.props;
-    const rowLength = this.props.Leftdata.length;
     return (
       <div>
         <div className={classes.selectedID}>
@@ -205,6 +215,12 @@ class leftGrid extends Component {
                     key={row.LOC_ID}
                     name={row.LOC_ID}
                     onClick={() => this.onRowClickevent(row)}
+                    selected={this.state.selected.includes(row.LOC_ID, 0)}
+                    className={classes.tableRow}
+                    classes={{
+                      hover: classes.hover,
+                      selected: classes.selected,
+                    }}
                   >
                     <TableCell component="th" scope="row">
                       {row.LOC_ID}

@@ -55,12 +55,18 @@ class editLocal extends Component {
 
   onCopyClick = (data) => {
     this.setState({
-      copydata: data,
+      //중복된 data를 없게 한다음 data 전송.
+      copydata: Array.from(new Set(this.state.copydata.concat(data))),
     });
   };
   onDeleteClick = () => {
+    if (this.state.copydata.length === 0) {
+      alert("복사된 교차로가 없습니다!");
+    } else if (this.state.copydata.length > 0) {
+      alert("복사된 교차로를 삭제했습니다.");
+    }
     this.setState({
-      copydata: "",
+      copydata: [],
     });
   };
   render() {
