@@ -99,10 +99,16 @@ class leftGrid extends Component {
     param.data = {};
     this.httpRequest(param);
     console.log("Recovery complete!");
+    alert("목록을 다시 불러왔습니다.");
   };
 
   onCopyClick = () => {
     const arrlength = this.state.selected.length;
+    if (arrlength === 0) {
+      alert("선택된 교차로가 없습니다!");
+    } else if (arrlength > 0) {
+      alert("선택한 교차로를 복사했습니다.");
+    }
     let copyimsi = [];
     for (let i = 0; i < arrlength; i++) {
       copyimsi[i] = this.props.Leftdata.find(
