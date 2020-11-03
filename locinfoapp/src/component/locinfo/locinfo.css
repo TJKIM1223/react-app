@@ -1,0 +1,19 @@
+.App{
+    display: grid;
+    grid-template-rows: 35px 1fr 35px;
+    background: #efece7;
+    height: 100vh;
+}
+.searchtab {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid lightgray;
+    font-size: 13px;
+}
+.tabletab {
+    display: grid
+}
+.buttontab {
+    border: 1px solid lightgray;
+    display: flex;
+}
