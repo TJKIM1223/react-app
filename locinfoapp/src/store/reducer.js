@@ -1,7 +1,8 @@
-import { READ_TABLE_DATA, REFER_DATA } from "../constant/actiontypes";
+import { READ_TABLE_DATA, GROUP_DATA } from "../constant/actiontypes";
 
 const tableState = {
   data: [],
+  groupdata: [],
 };
 // // // // // // // //
 const Tableedit = (state = tableState, action) => {
@@ -33,15 +34,28 @@ const Tableedit = (state = tableState, action) => {
         });
       }
       arrdata = arrdata.sort(function (a, b) {
-        return a.ID - b.ID;
+        return a.LOC_ID - b.LOC_ID;
       });
       return {
         ...state,
         data: arrdata,
       };
 
-    case REFER_DATA:
-      return state;
+    case GROUP_DATA:
+      let grpdata = [];
+      for (let local of action.data) {
+        grpdata.push({
+          GRP_ID: local.id,
+          GRP_NM: local.name,
+        });
+      }
+      grpdata = grpdata.sort(function (a, b) {
+        return a.GRP_ID - b.GRP_ID;
+      });
+      return {
+        ...state,
+        groupdata: grpdata,
+      };
     default:
       return state;
   }

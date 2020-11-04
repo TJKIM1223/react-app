@@ -1,4 +1,4 @@
-import { READ_TABLE_DATA, REFER_DATA } from "../constant/actiontypes";
+import { READ_TABLE_DATA, GROUP_DATA } from "../constant/actiontypes";
 // // // // // // //
 export function readTableData(data) {
   return {
@@ -6,8 +6,9 @@ export function readTableData(data) {
     data: data,
   };
 }
-export function referData() {
+export function groupData(data) {
   return {
-    type: REFER_DATA,
+    type: GROUP_DATA,
+    data: data,
   };
 }

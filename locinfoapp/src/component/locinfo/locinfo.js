@@ -13,7 +13,7 @@ import PageviewIcon from "@material-ui/icons/Pageview";
 import InputBase from "@material-ui/core/InputBase";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
-import { readTableData, referData } from "../../action/action";
+import { readTableData, groupData } from "../../action/action";
 import "./locinfo.css";
 
 const baseURL1 = "http://10.1.1.153:5000/";
@@ -45,13 +45,6 @@ const useStyles = (theme) => ({
     alignItems: "center",
     marginRight: "5px",
   },
-  readonlyroot: {
-    width: 300,
-    height: 25,
-    display: "flex",
-    alignItems: "center",
-    marginRight: "5px",
-  },
   divider: {
     height: 25,
   },
@@ -65,8 +58,18 @@ const useStyles = (theme) => ({
       textAlign: "center",
     },
   },
-  readonlytext: {
-    width: 300,
+  buttons: {
+    width: 80,
+    marginLeft: 10,
+  },
+  grouproot: {
+    width: 200,
+    height: 25,
+    marginLeft: "10px",
+    marginRight: "5px",
+  },
+  grouptext: {
+    width: 200,
     height: 25,
     fontSize: "14px",
     alignContent: "center",
@@ -76,23 +79,18 @@ const useStyles = (theme) => ({
       textAlign: "center",
     },
   },
-  buttons: {
-    width: 80,
-    marginLeft: 10,
-  },
-  grouproot: {
-    width: 100,
+  groupinputroot: {
+    width: 270,
     height: 25,
-    marginLeft: "10px",
-    marginRight: "5px",
+    display: "flex",
+    alignItems: "center",
+    marginLeft: "auto",
+    marginRight: "auto",
+    marginTop: "5px",
   },
-  grouptext: {
-    width: 100,
-    height: 25,
+  groupinput: {
+    width: 160,
     fontSize: "14px",
-    alignContent: "center",
-    textAlign: "center",
-    align: "center",
     "& input": {
       textAlign: "center",
     },
@@ -102,6 +100,18 @@ const useStyles = (theme) => ({
     marginRight: 10,
     marginLeft: 10,
   },
+  groupreadonly: {
+    width: 90,
+    "& input": {
+      textAlign: "center",
+    },
+  },
+  tableRow: {
+    "&$selected, &$selected:hover": {
+      backgroundColor: "gray",
+    },
+  },
+  selected: {},
 });
 
 function createData(
@@ -147,14 +157,34 @@ function createData(
     USE_YN,
   };
 }
-
+function createGroupData(GRP_ID, GRP_NM) {
+  return {
+    GRP_ID,
+    GRP_NM,
+  };
+}
 class loctable extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      groupinput: "",
+      groupSelected: [],
+      groupname: [],
+      LCSelected: [],
+      selectedName: [],
+    };
+  }
   componentDidMount() {
     let param = {};
     param.url = "/local";
     param.method = "get";
     param.data = {};
     this.httpRequest(param);
+    let groupparam = {};
+    groupparam.url = "/group";
+    groupparam.method = "get";
+    groupparam.data = {};
+    this.groupRequest(groupparam);
   }
   httpRequest(param) {
     let rst = {};
@@ -168,6 +198,23 @@ class loctable extends Component {
       console.log("Success! ");
       rst = response.data;
       this.props.loaddata(rst.data);
+    });
+    promise.catch((response) => {
+      console.log("Error! ", response);
+    });
+  }
+  groupRequest(param) {
+    let grprst = {};
+    axios.defaults.baseURL = baseURL1;
+    let promise = axios({
+      method: param.method,
+      url: param.url,
+      data: param.data,
+    });
+    promise.then((response) => {
+      console.log("Success! ");
+      grprst = response.data;
+      this.props.groupdata(grprst.data);
     });
     promise.catch((response) => {
       console.log("Error! ", response);
@@ -191,10 +238,57 @@ class loctable extends Component {
   onFileSaveClick = () => {
     console.log("파일로 저장하기");
   };
+  onCloseClick = () => {
+    console.log("닫기");
+  };
+  onGrouprowClick = (data) => {
+    const checkGroupdata = this.state.groupSelected.indexOf(data.GRP_ID, 0);
+    if (checkGroupdata === -1) {
+      this.setState({
+        groupSelected: this.state.groupSelected.concat(data.GRP_ID),
+        groupname: this.state.groupname.concat(data.GRP_NM),
+      });
+    } else if (checkGroupdata > -1) {
+      this.setState({
+        groupSelected: this.state.groupSelected.filter(
+          (item) => item !== data.GRP_ID
+        ),
+        groupname: this.state.groupname.filter((item) => item !== data.GRP_NM),
+      });
+    }
+  };
+  onGroupSearchClick = () => {
+    console.log(this.state.groupinput, "검색하기");
+    let inputnumber = parseInt(this.state.groupinput);
+    console.log(inputnumber);
+    if (!inputnumber) {
+      let groupparam = {};
+      groupparam.url = "/group";
+      groupparam.method = "get";
+      groupparam.data = {};
+      this.groupRequest(groupparam);
+      console.log("값이 없음!");
+    } else {
+      let groupparam = {};
+      groupparam.url = "/group";
+      groupparam.method = "get";
+      groupparam.data = {};
+      this.groupRequest(groupparam);
+      let inputarray = this.props.grouplistdata.filter(
+        (item) => item.GRP_ID === inputnumber
+      );
+      console.log(inputarray);
+      this.props.groupdata(inputarray);
+    }
+  };
+  onGroupinputChange = (e) => {
+    this.setState({
+      groupinput: e.target.value,
+    });
+  };
 
   render() {
     const { classes } = this.props;
-    console.log(this.props.tabledata);
     let rows = [];
     for (let local of this.props.tabledata) {
       rows.push(
@@ -224,205 +318,280 @@ class loctable extends Component {
     rows = rows.sort(function (a, b) {
       return a.LOC_ID - b.LOC_ID;
     });
+    let grouprows = [];
+    for (let local of this.props.grouplistdata) {
+      grouprows.push(createGroupData(local.GRP_ID, local.GRP_NM));
+    }
+    grouprows = grouprows.sort(function (a, b) {
+      return a.GRP_ID - b.GRP_ID;
+    });
     return (
       <div className="App">
-        <div className="searchtab">
-          <Paper component="form" className={classes.grouproot}>
-            <InputBase
-              readOnly
-              placeholder="그룹"
-              className={classes.grouptext}
-            />
-          </Paper>
-          <Paper component="form" className={classes.inputroot}>
-            <InputBase className={classes.input} />
-            <Divider className={classes.divider} orientation="vertical" />
-            <IconButton
-              className={classes.iconButton}
-              onClick={this.onSearchClick}
-            >
-              <PageviewIcon />
-            </IconButton>
-          </Paper>
-          <Paper component="form" className={classes.readonlyroot}>
-            <InputBase
-              readOnly
-              placeholder="해당하는 값 표시"
-              className={classes.readonlytext}
-            />
-          </Paper>
-          <input type="checkbox" id="allcheck" />
-          <label fontSize="8px">모든 신호교차로</label>
-        </div>
-        <div className="tabletab">
-          <TableContainer component={Paper}>
-            <Table size="small" aria-label="a dense table">
-              <TableHead>
-                <TableRow>
-                  <TableCell className={classes.top} width="10px" />
-                  <TableCell align="center" className={classes.top}>
-                    LC번호
-                  </TableCell>
-                  <TableCell align="center" className={classes.top}>
-                    노드ID
-                  </TableCell>
-                  <TableCell align="center" className={classes.top}>
-                    교차로명칭
-                  </TableCell>
-                  <TableCell align="center" className={classes.top}>
-                    교차로유형
-                  </TableCell>
-                  <TableCell align="center" className={classes.top}>
-                    제어기유형
-                  </TableCell>
-                  <TableCell align="center" className={classes.top}>
-                    등기구유형
-                  </TableCell>
-                  <TableCell align="center" className={classes.top}>
-                    MCU 펌웨어ID
-                  </TableCell>
-                  <TableCell align="center" className={classes.top}>
-                    SCU 펌웨어ID
-                  </TableCell>
-                  <TableCell align="center" className={classes.top}>
-                    델타허용값
-                  </TableCell>
-                  <TableCell align="center" className={classes.top}>
-                    전이주기수
-                  </TableCell>
-                  <TableCell align="center" className={classes.top}>
-                    자동오류보정방법
-                  </TableCell>
-                  <TableCell align="center" className={classes.top}>
-                    자동센터모드
-                  </TableCell>
-                  <TableCell align="center" className={classes.top}>
-                    통신방식
-                  </TableCell>
-                  <TableCell align="center" className={classes.top}>
-                    IP주소/디바이스명
-                  </TableCell>
-                  <TableCell align="center" className={classes.top}>
-                    포트번호
-                  </TableCell>
-                  <TableCell align="center" className={classes.top}>
-                    주요교차로
-                  </TableCell>
-                  <TableCell align="center" className={classes.top}>
-                    그룹번호
-                  </TableCell>
-                  <TableCell align="center" className={classes.top}>
-                    그룹순번
-                  </TableCell>
-                  <TableCell align="center" className={classes.top}>
-                    사용여부
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {rows.map((row) => (
-                  <TableRow
-                    hover
-                    key={row.LOC_ID}
-                    name={row.LOC_ID}
-                    // onClick={() => this.onRowClickevent(row)}
-                    // selected={this.state.selected.includes(row.LOC_ID, 0)}
-                    className={classes.tableRow}
-                    // classes={{
-                    //   hover: classes.hover,
-                    //   selected: classes.selected,
-                    // }}
-                  >
-                    <TableCell className={classes.top} />
-                    <TableCell component="th" scope="row">
-                      {row.LOC_ID}
+        <div className="Groupselect">
+          <div className="groupSearchtab">
+            <Paper component="form" className={classes.groupinputroot}>
+              <InputBase
+                className={classes.groupreadonly}
+                readOnly
+                value="그룹번호"
+              />
+              <Divider className={classes.divider} orientation="vertical" />
+              <InputBase
+                className={classes.groupinput}
+                onChange={this.onGroupinputChange}
+                type="number"
+              />
+              <Divider className={classes.divider} orientation="vertical" />
+              <IconButton
+                className={classes.iconButton}
+                onClick={this.onGroupSearchClick}
+              >
+                <PageviewIcon />
+              </IconButton>
+            </Paper>
+          </div>
+          <div className="grouplist">
+            <TableContainer component={Paper}>
+              <Table size="small" aria-label="a dense table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="center" className={classes.top}>
+                      그룹번호
                     </TableCell>
                     <TableCell align="center" className={classes.top}>
-                      {row.NODE_ID}
-                    </TableCell>
-                    <TableCell align="center" className={classes.top}>
-                      {row.LOC_NM}
-                    </TableCell>
-                    <TableCell align="center" className={classes.top}>
-                      {row.LOC_TYPE}
-                    </TableCell>
-                    <TableCell align="center" className={classes.top}>
-                      {row.LC_TYPE}
-                    </TableCell>
-                    <TableCell align="center" className={classes.top}>
-                      {row.LAMP_TYPE}
-                    </TableCell>
-                    <TableCell align="center" className={classes.top}>
-                      {row.MCUFW_ID}
-                    </TableCell>
-                    <TableCell align="center" className={classes.top}>
-                      {row.SCUFW_ID}
-                    </TableCell>
-                    <TableCell align="center" className={classes.top}>
-                      {row.DELTA}
-                    </TableCell>
-                    <TableCell align="center" className={classes.top}>
-                      {row.TRANS_CYC}
-                    </TableCell>
-                    <TableCell align="center" className={classes.top}>
-                      {row.AUTO_CORR}
-                    </TableCell>
-                    <TableCell align="center" className={classes.top}>
-                      {row.AUTO_CNTMOD}
-                    </TableCell>
-                    <TableCell align="center" className={classes.top}>
-                      {row.COMM_TYPE}
-                    </TableCell>
-                    <TableCell align="center" className={classes.top}>
-                      {row.IPADDR}
-                    </TableCell>
-                    <TableCell align="center" className={classes.top}>
-                      {row.PORT_NUM}
-                    </TableCell>
-                    <TableCell align="center" className={classes.top}>
-                      {row.MAIN_LOC}
-                    </TableCell>
-                    <TableCell align="center" className={classes.top}>
-                      {row.GRP_ID}
-                    </TableCell>
-                    <TableCell align="center" className={classes.top}>
-                      {row.GRP_ORD}
-                    </TableCell>
-                    <TableCell align="center" className={classes.top}>
-                      {row.USE_YN}
+                      그룹명칭
                     </TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                </TableHead>
+                <TableBody>
+                  {grouprows.map((row) => (
+                    <TableRow
+                      hover
+                      key={row.GRP_ID}
+                      name={row.GRP_ID}
+                      onClick={() => this.onGrouprowClick(row)}
+                      selected={this.state.groupSelected.includes(
+                        row.GRP_ID,
+                        0
+                      )}
+                      className={classes.tableRow}
+                      classes={{
+                        hover: classes.hover,
+                        selected: classes.selected,
+                      }}
+                    >
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        style={{ fontSize: "15px" }}
+                      >
+                        {row.GRP_ID}
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        className={classes.top}
+                        style={{ fontSize: "15px" }}
+                      >
+                        {row.GRP_NM}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </div>
         </div>
-        <div className="buttontab">
-          <button className={classes.buttons} onClick={this.onReferClick}>
-            조회
-          </button>
-          <button className={classes.buttons} onClick={this.onAddClick}>
-            추가
-          </button>
-          <button className={classes.buttons} onClick={this.onDeleteClick}>
-            삭제
-          </button>
-          <button
-            disabled
-            className={classes.buttons}
-            onClick={this.onSaveClick}
-          >
-            저장
-          </button>
-          <button className={classes.buttons} onClick={this.onFileSaveClick}>
-            파일저장
-          </button>
-          <button
-            className={classes.closebuttons}
-            style={{ marginLeft: "auto" }}
-          >
-            닫기
-          </button>
+        <div className="Mainarea">
+          <div className="searchtab">
+            <Paper component="form" className={classes.grouproot}>
+              <InputBase readOnly value="그룹" className={classes.grouptext} />
+            </Paper>
+            <Paper component="form" className={classes.inputroot}>
+              <InputBase className={classes.input} />
+              <Divider className={classes.divider} orientation="vertical" />
+              <IconButton
+                className={classes.iconButton}
+                onClick={this.onSearchClick}
+              >
+                <PageviewIcon />
+              </IconButton>
+            </Paper>
+            <input type="checkbox" id="allcheck" />
+            <label fontSize="8px" style={{ color: "white" }}>
+              모든 신호교차로
+            </label>
+          </div>
+          <div className="tabletab">
+            <TableContainer component={Paper}>
+              <Table size="small" aria-label="a dense table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell className={classes.top} width="10px" />
+                    <TableCell align="center" className={classes.top}>
+                      LC번호
+                    </TableCell>
+                    <TableCell align="center" className={classes.top}>
+                      노드ID
+                    </TableCell>
+                    <TableCell align="center" className={classes.top}>
+                      교차로명칭
+                    </TableCell>
+                    <TableCell align="center" className={classes.top}>
+                      교차로유형
+                    </TableCell>
+                    <TableCell align="center" className={classes.top}>
+                      제어기유형
+                    </TableCell>
+                    <TableCell align="center" className={classes.top}>
+                      등기구유형
+                    </TableCell>
+                    <TableCell align="center" className={classes.top}>
+                      MCU 펌웨어ID
+                    </TableCell>
+                    <TableCell align="center" className={classes.top}>
+                      SCU 펌웨어ID
+                    </TableCell>
+                    <TableCell align="center" className={classes.top}>
+                      델타허용값
+                    </TableCell>
+                    <TableCell align="center" className={classes.top}>
+                      전이주기수
+                    </TableCell>
+                    <TableCell align="center" className={classes.top}>
+                      자동오류보정방법
+                    </TableCell>
+                    <TableCell align="center" className={classes.top}>
+                      자동센터모드
+                    </TableCell>
+                    <TableCell align="center" className={classes.top}>
+                      통신방식
+                    </TableCell>
+                    <TableCell align="center" className={classes.top}>
+                      IP주소/디바이스명
+                    </TableCell>
+                    <TableCell align="center" className={classes.top}>
+                      포트번호
+                    </TableCell>
+                    <TableCell align="center" className={classes.top}>
+                      주요교차로
+                    </TableCell>
+                    <TableCell align="center" className={classes.top}>
+                      그룹번호
+                    </TableCell>
+                    <TableCell align="center" className={classes.top}>
+                      그룹순번
+                    </TableCell>
+                    <TableCell align="center" className={classes.top}>
+                      사용여부
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {rows.map((row) => (
+                    <TableRow
+                      hover
+                      key={row.LOC_ID}
+                      name={row.LOC_ID}
+                      // onClick={() => this.onRowClickevent(row)}
+                      // selected={this.state.selected.includes(row.LOC_ID, 0)}
+                      className={classes.tableRow}
+                      // classes={{
+                      //   hover: classes.hover,
+                      //   selected: classes.selected,
+                      // }}
+                    >
+                      <TableCell className={classes.top} />
+                      <TableCell component="th" scope="row">
+                        {row.LOC_ID}
+                      </TableCell>
+                      <TableCell align="center" className={classes.top}>
+                        {row.NODE_ID}
+                      </TableCell>
+                      <TableCell align="center" className={classes.top}>
+                        {row.LOC_NM}
+                      </TableCell>
+                      <TableCell align="center" className={classes.top}>
+                        {row.LOC_TYPE}
+                      </TableCell>
+                      <TableCell align="center" className={classes.top}>
+                        {row.LC_TYPE}
+                      </TableCell>
+                      <TableCell align="center" className={classes.top}>
+                        {row.LAMP_TYPE}
+                      </TableCell>
+                      <TableCell align="center" className={classes.top}>
+                        {row.MCUFW_ID}
+                      </TableCell>
+                      <TableCell align="center" className={classes.top}>
+                        {row.SCUFW_ID}
+                      </TableCell>
+                      <TableCell align="center" className={classes.top}>
+                        {row.DELTA}
+                      </TableCell>
+                      <TableCell align="center" className={classes.top}>
+                        {row.TRANS_CYC}
+                      </TableCell>
+                      <TableCell align="center" className={classes.top}>
+                        {row.AUTO_CORR}
+                      </TableCell>
+                      <TableCell align="center" className={classes.top}>
+                        {row.AUTO_CNTMOD}
+                      </TableCell>
+                      <TableCell align="center" className={classes.top}>
+                        {row.COMM_TYPE}
+                      </TableCell>
+                      <TableCell align="center" className={classes.top}>
+                        {row.IPADDR}
+                      </TableCell>
+                      <TableCell align="center" className={classes.top}>
+                        {row.PORT_NUM}
+                      </TableCell>
+                      <TableCell align="center" className={classes.top}>
+                        {row.MAIN_LOC}
+                      </TableCell>
+                      <TableCell align="center" className={classes.top}>
+                        {row.GRP_ID}
+                      </TableCell>
+                      <TableCell align="center" className={classes.top}>
+                        {row.GRP_ORD}
+                      </TableCell>
+                      <TableCell align="center" className={classes.top}>
+                        {row.USE_YN}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </div>
+          <div className="buttontab">
+            <button className={classes.buttons} onClick={this.onReferClick}>
+              초기화
+            </button>
+            <button className={classes.buttons} onClick={this.onAddClick}>
+              추가
+            </button>
+            <button className={classes.buttons} onClick={this.onDeleteClick}>
+              삭제
+            </button>
+            <button
+              disabled
+              className={classes.buttons}
+              onClick={this.onSaveClick}
+            >
+              저장
+            </button>
+            <button className={classes.buttons} onClick={this.onFileSaveClick}>
+              파일저장
+            </button>
+            <button
+              className={classes.closebuttons}
+              style={{ marginLeft: "auto" }}
+              onClick={this.onCloseClick}
+            >
+              닫기
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -432,11 +601,13 @@ class loctable extends Component {
 let mapStateToProps = (state) => {
   return {
     tabledata: state.data,
+    grouplistdata: state.groupdata,
   };
 };
 
 let mapDispatchtoProps = (dispatch) => ({
   loaddata: (data) => dispatch(readTableData(data)),
+  groupdata: (data) => dispatch(groupData(data)),
 });
 
 loctable = connect(mapStateToProps, mapDispatchtoProps)(loctable);

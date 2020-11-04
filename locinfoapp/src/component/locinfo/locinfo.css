@@ -1,19 +1,36 @@
-.App{
+.App {
+    display: grid;    
+    height: 100vh;
+    grid-template-columns: 1fr 4fr;
+}
+.Mainarea{
     display: grid;
     grid-template-rows: 35px 1fr 35px;
-    background: #efece7;
-    height: 100vh;
+
+    border:solid #575757;
+    border-width: 0 3px 0 3px;
+}
+.Groupselect{
+    display: grid;
+    grid-template-rows: 35px 1fr;
 }
 .searchtab {
     display: inline-flex;
+    background: #575757;
     align-items: center;
-    border: 1px solid lightgray;
     font-size: 13px;
 }
 .tabletab {
     display: grid
 }
 .buttontab {
-    border: 1px solid lightgray;
+    background: #575757;
     display: flex;
+}
+.groupSearchtab {
+    background: #575757;
+}
+.grouplist {
+    border:solid #575757;
+    border-width: 0 3px 35px 3px;
 }
