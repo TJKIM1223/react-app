@@ -34,3 +34,23 @@
     border:solid #575757;
     border-width: 0 3px 35px 3px;
 }
+.popupheadbar {
+    display: flex;
+    height: 25px;
+}
+.popupcontent {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+.popupgrid {
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+.popupgridinput {
+    margin-left: auto;
+    margin-right: 30px;
+    height: 25px;
+    width: 75px;
+    border: none;
+    background: lightgray;
+}

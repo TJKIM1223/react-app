@@ -2,6 +2,7 @@ import { Component } from "react";
 import axios from "axios";
 import { connect } from "react-redux";
 import Table from "@material-ui/core/Table";
+import Dialog from "@material-ui/core/Dialog";
 import { withStyles } from "@material-ui/core/styles";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -13,6 +14,12 @@ import PageviewIcon from "@material-ui/icons/Pageview";
 import InputBase from "@material-ui/core/InputBase";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
+import MuiDialogTitle from "@material-ui/core/DialogTitle";
+import MuiDialogContent from "@material-ui/core/DialogContent";
+import Button from "@material-ui/core/Button";
+import MuiDialogActions from "@material-ui/core/DialogActions";
+import CloseIcon from "@material-ui/icons/Close";
+import Typography from "@material-ui/core/Typography";
 import { readTableData, groupData } from "../../action/action";
 import "./locinfo.css";
 
@@ -168,10 +175,12 @@ class loctable extends Component {
     super(props);
     this.state = {
       groupinput: "",
-      groupSelected: [],
-      groupname: [],
+      groupSelected: "",
+      groupname: "",
       LCSelected: [],
       selectedName: [],
+      addstate: false,
+      editstate: false,
     };
   }
   componentDidMount() {
@@ -220,6 +229,13 @@ class loctable extends Component {
       console.log("Error! ", response);
     });
   }
+  onDialogCloseClick = () => {
+    console.log("DIALOG 닫기");
+    this.setState({
+      addstate: false,
+      editstate: false,
+    });
+  };
   onSearchClick = () => {
     console.log("검색하기");
   };
@@ -228,6 +244,15 @@ class loctable extends Component {
   };
   onAddClick = () => {
     console.log("추가하기");
+    this.setState({
+      addstate: true,
+    });
+  };
+  onEditClick = () => {
+    console.log("편집하기");
+    this.setState({
+      editstate: true,
+    });
   };
   onDeleteClick = () => {
     console.log("빼기");
@@ -242,18 +267,29 @@ class loctable extends Component {
     console.log("닫기");
   };
   onGrouprowClick = (data) => {
-    const checkGroupdata = this.state.groupSelected.indexOf(data.GRP_ID, 0);
-    if (checkGroupdata === -1) {
+    // const checkGroupdata = this.state.groupSelected.indexOf(data.GRP_ID, 0);
+    // if (checkGroupdata === -1) {
+    // this.setState({
+    //   groupSelected: this.state.groupSelected.concat(data.GRP_ID),
+    //   groupname: this.state.groupname.concat(data.GRP_NM),
+    // });
+    // } else if (checkGroupdata > -1) {
+    //   this.setState({
+    //     groupSelected: this.state.groupSelected.filter(
+    //       (item) => item !== data.GRP_ID
+    //     ),
+    //     groupname: this.state.groupname.filter((item) => item !== data.GRP_NM),
+    //   });
+    // }
+    if (this.state.groupSelected === data.GRP_ID) {
       this.setState({
-        groupSelected: this.state.groupSelected.concat(data.GRP_ID),
-        groupname: this.state.groupname.concat(data.GRP_NM),
+        groupSelected: "",
+        groupname: "",
       });
-    } else if (checkGroupdata > -1) {
+    } else if (this.state.groupSelected !== data.GRP_ID) {
       this.setState({
-        groupSelected: this.state.groupSelected.filter(
-          (item) => item !== data.GRP_ID
-        ),
-        groupname: this.state.groupname.filter((item) => item !== data.GRP_NM),
+        groupSelected: data.GRP_ID,
+        groupname: data.GRP_NM,
       });
     }
   };
@@ -274,7 +310,8 @@ class loctable extends Component {
       groupparam.method = "get";
       groupparam.data = {};
       this.groupRequest(groupparam);
-      let inputarray = this.props.grouplistdata.filter(
+      let inputarray = [];
+      inputarray = this.props.grouplistdata.filter(
         (item) => item.GRP_ID === inputnumber
       );
       console.log(inputarray);
@@ -289,6 +326,7 @@ class loctable extends Component {
 
   render() {
     const { classes } = this.props;
+    console.log(this.state.groupSelected);
     let rows = [];
     for (let local of this.props.tabledata) {
       rows.push(
@@ -370,10 +408,9 @@ class loctable extends Component {
                       key={row.GRP_ID}
                       name={row.GRP_ID}
                       onClick={() => this.onGrouprowClick(row)}
-                      selected={this.state.groupSelected.includes(
-                        row.GRP_ID,
-                        0
-                      )}
+                      selected={
+                        this.state.groupSelected === row.GRP_ID ? true : false
+                      }
                       className={classes.tableRow}
                       classes={{
                         hover: classes.hover,
@@ -404,7 +441,12 @@ class loctable extends Component {
         <div className="Mainarea">
           <div className="searchtab">
             <Paper component="form" className={classes.grouproot}>
-              <InputBase readOnly value="그룹" className={classes.grouptext} />
+              <InputBase
+                readOnly
+                placeholder="그룹"
+                value={this.state.groupname}
+                className={classes.grouptext}
+              />
             </Paper>
             <Paper component="form" className={classes.inputroot}>
               <InputBase className={classes.input} />
@@ -571,6 +613,9 @@ class loctable extends Component {
             <button className={classes.buttons} onClick={this.onAddClick}>
               추가
             </button>
+            <button className={classes.buttons} onClick={this.onEditClick}>
+              편집
+            </button>
             <button className={classes.buttons} onClick={this.onDeleteClick}>
               삭제
             </button>
@@ -593,6 +638,196 @@ class loctable extends Component {
             </button>
           </div>
         </div>
+        <Dialog open={this.state.addstate} fullWidth={true} maxWidth="sm">
+          <MuiDialogTitle disableTypography>
+            <div className="popupheadbar">
+              <Typography variant="h6" style={{ alignSelf: "center" }}>
+                제어기 추가
+              </Typography>
+              <IconButton
+                // className={classes.closeButton}
+                onClick={this.onDialogCloseClick}
+                style={{ marginLeft: "auto", alignSelf: "center" }}
+              >
+                <CloseIcon />
+              </IconButton>
+            </div>
+          </MuiDialogTitle>
+          <MuiDialogContent dividers className="popupcontent">
+            <div className="popupgrid">
+              <div
+                style={{ display: "flex", fontSize: "18px", marginTop: "5px" }}
+              >
+                ID <input className="popupgridinput" />
+              </div>
+              <div
+                style={{ display: "flex", fontSize: "18px", marginTop: "5px" }}
+              >
+                명칭 <input className="popupgridinput" />
+              </div>
+              <div
+                style={{ display: "flex", fontSize: "18px", marginTop: "5px" }}
+              >
+                교차로유형 <input className="popupgridinput" />
+              </div>
+              <div
+                style={{ display: "flex", fontSize: "18px", marginTop: "5px" }}
+              >
+                제어기유형 <input className="popupgridinput" />
+              </div>
+              <div
+                style={{ display: "flex", fontSize: "18px", marginTop: "5px" }}
+              >
+                등기구유형 <input className="popupgridinput" />
+              </div>
+              <div
+                style={{ display: "flex", fontSize: "18px", marginTop: "5px" }}
+              >
+                델타 <input className="popupgridinput" />
+              </div>
+              <div
+                style={{ display: "flex", fontSize: "18px", marginTop: "5px" }}
+              >
+                전이주기수 <input className="popupgridinput" />
+              </div>
+            </div>
+            <div>
+              <div
+                style={{ display: "flex", fontSize: "18px", marginTop: "5px" }}
+              >
+                자동오류보정 <input className="popupgridinput" />
+              </div>
+              <div
+                style={{ display: "flex", fontSize: "18px", marginTop: "5px" }}
+              >
+                자동센터모드 <input className="popupgridinput" />
+              </div>
+              <div
+                style={{ display: "flex", fontSize: "18px", marginTop: "5px" }}
+              >
+                통신방식 <input className="popupgridinput" />
+              </div>
+              <div
+                style={{ display: "flex", fontSize: "18px", marginTop: "5px" }}
+              >
+                IP <input className="popupgridinput" />
+              </div>
+              <div
+                style={{ display: "flex", fontSize: "18px", marginTop: "5px" }}
+              >
+                포트번호 <input className="popupgridinput" />
+              </div>
+              <div
+                style={{ display: "flex", fontSize: "18px", marginTop: "5px" }}
+              >
+                주요교차로 <input className="popupgridinput" />
+              </div>
+              <div
+                style={{ display: "flex", fontSize: "18px", marginTop: "5px" }}
+              >
+                그룹번호 <input className="popupgridinput" />
+              </div>
+            </div>
+          </MuiDialogContent>
+          <MuiDialogActions>
+            <Button>저장</Button>
+          </MuiDialogActions>
+        </Dialog>
+        <Dialog open={this.state.editstate} fullWidth={true} maxWidth="sm">
+          <MuiDialogTitle disableTypography>
+            <div className="popupheadbar">
+              <Typography variant="h6" style={{ alignSelf: "center" }}>
+                제어기 편집
+              </Typography>
+              <IconButton
+                // className={classes.closeButton}
+                onClick={this.onDialogCloseClick}
+                style={{ marginLeft: "auto", alignSelf: "center" }}
+              >
+                <CloseIcon />
+              </IconButton>
+            </div>
+          </MuiDialogTitle>
+          <MuiDialogContent dividers className="popupcontent">
+            <div className="popupgrid">
+              <div
+                style={{ display: "flex", fontSize: "18px", marginTop: "5px" }}
+              >
+                ID <input className="popupgridinput" />
+              </div>
+              <div
+                style={{ display: "flex", fontSize: "18px", marginTop: "5px" }}
+              >
+                명칭 <input className="popupgridinput" />
+              </div>
+              <div
+                style={{ display: "flex", fontSize: "18px", marginTop: "5px" }}
+              >
+                교차로유형 <input className="popupgridinput" />
+              </div>
+              <div
+                style={{ display: "flex", fontSize: "18px", marginTop: "5px" }}
+              >
+                제어기유형 <input className="popupgridinput" />
+              </div>
+              <div
+                style={{ display: "flex", fontSize: "18px", marginTop: "5px" }}
+              >
+                등기구유형 <input className="popupgridinput" />
+              </div>
+              <div
+                style={{ display: "flex", fontSize: "18px", marginTop: "5px" }}
+              >
+                델타 <input className="popupgridinput" />
+              </div>
+              <div
+                style={{ display: "flex", fontSize: "18px", marginTop: "5px" }}
+              >
+                전이주기수 <input className="popupgridinput" />
+              </div>
+            </div>
+            <div>
+              <div
+                style={{ display: "flex", fontSize: "18px", marginTop: "5px" }}
+              >
+                자동오류보정 <input className="popupgridinput" />
+              </div>
+              <div
+                style={{ display: "flex", fontSize: "18px", marginTop: "5px" }}
+              >
+                자동센터모드 <input className="popupgridinput" />
+              </div>
+              <div
+                style={{ display: "flex", fontSize: "18px", marginTop: "5px" }}
+              >
+                통신방식 <input className="popupgridinput" />
+              </div>
+              <div
+                style={{ display: "flex", fontSize: "18px", marginTop: "5px" }}
+              >
+                IP <input className="popupgridinput" />
+              </div>
+              <div
+                style={{ display: "flex", fontSize: "18px", marginTop: "5px" }}
+              >
+                포트번호 <input className="popupgridinput" />
+              </div>
+              <div
+                style={{ display: "flex", fontSize: "18px", marginTop: "5px" }}
+              >
+                주요교차로 <input className="popupgridinput" />
+              </div>
+              <div
+                style={{ display: "flex", fontSize: "18px", marginTop: "5px" }}
+              >
+                그룹번호 <input className="popupgridinput" />
+              </div>
+            </div>
+          </MuiDialogContent>
+          <MuiDialogActions>
+            <Button>저장</Button>
+          </MuiDialogActions>
+        </Dialog>
       </div>
     );
   }
