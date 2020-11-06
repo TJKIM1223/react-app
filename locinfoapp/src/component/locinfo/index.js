@@ -1,7 +1,5 @@
 import { Component } from "react";
 import axios from "axios";
-import { connect } from "react-redux";
-import { readTableData, groupData } from "../../action/action";
 import LOCtable from "./locinfo";
 
 const baseURL1 = "http://10.1.1.153:5000/";
@@ -115,11 +113,5 @@ class index extends Component {
     );
   }
 }
-let mapDispatchtoProps = (dispatch) => ({
-  loaddata: (data) => dispatch(readTableData(data)),
-  groupdata: (data) => dispatch(groupData(data)),
-});
-
-index = connect(null, mapDispatchtoProps)(index);
 
 export default index;
