@@ -9,8 +9,8 @@ class HOME extends Component {
           <button
             onClick={() =>
               window.open(
-                "/locinfo",
-                "LOCINFO",
+                "/index",
+                "index",
                 "width=1500, height=500,menubar=1, "
               )
             }

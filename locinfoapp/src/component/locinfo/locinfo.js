@@ -1,6 +1,4 @@
 import { Component } from "react";
-import axios from "axios";
-import { connect } from "react-redux";
 import Table from "@material-ui/core/Table";
 import Dialog from "@material-ui/core/Dialog";
 import { withStyles } from "@material-ui/core/styles";
@@ -20,10 +18,8 @@ import Button from "@material-ui/core/Button";
 import MuiDialogActions from "@material-ui/core/DialogActions";
 import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
-import { readTableData, groupData } from "../../action/action";
 import "./locinfo.css";
 
-const baseURL1 = "http://10.1.1.153:5000/";
 const useStyles = (theme) => ({
   top: {
     fontSize: 8,
@@ -170,7 +166,7 @@ function createGroupData(GRP_ID, GRP_NM) {
     GRP_NM,
   };
 }
-class loctable extends Component {
+class LOCtable extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -182,52 +178,6 @@ class loctable extends Component {
       addstate: false,
       editstate: false,
     };
-  }
-  componentDidMount() {
-    let param = {};
-    param.url = "/local";
-    param.method = "get";
-    param.data = {};
-    this.httpRequest(param);
-    let groupparam = {};
-    groupparam.url = "/group";
-    groupparam.method = "get";
-    groupparam.data = {};
-    this.groupRequest(groupparam);
-  }
-  httpRequest(param) {
-    let rst = {};
-    axios.defaults.baseURL = baseURL1;
-    let promise = axios({
-      method: param.method,
-      url: param.url,
-      data: param.data,
-    });
-    promise.then((response) => {
-      console.log("Success! ");
-      rst = response.data;
-      this.props.loaddata(rst.data);
-    });
-    promise.catch((response) => {
-      console.log("Error! ", response);
-    });
-  }
-  groupRequest(param) {
-    let grprst = {};
-    axios.defaults.baseURL = baseURL1;
-    let promise = axios({
-      method: param.method,
-      url: param.url,
-      data: param.data,
-    });
-    promise.then((response) => {
-      console.log("Success! ");
-      grprst = response.data;
-      this.props.groupdata(grprst.data);
-    });
-    promise.catch((response) => {
-      console.log("Error! ", response);
-    });
   }
   onDialogCloseClick = () => {
     console.log("DIALOG 닫기");
@@ -275,20 +225,6 @@ class loctable extends Component {
     });
   };
   onGrouprowClick = (data) => {
-    // const checkGroupdata = this.state.groupSelected.indexOf(data.GRP_ID, 0);
-    // if (checkGroupdata === -1) {
-    // this.setState({
-    //   groupSelected: this.state.groupSelected.concat(data.GRP_ID),
-    //   groupname: this.state.groupname.concat(data.GRP_NM),
-    // });
-    // } else if (checkGroupdata > -1) {
-    //   this.setState({
-    //     groupSelected: this.state.groupSelected.filter(
-    //       (item) => item !== data.GRP_ID
-    //     ),
-    //     groupname: this.state.groupname.filter((item) => item !== data.GRP_NM),
-    //   });
-    // }
     if (this.state.groupSelected === data.GRP_ID) {
       this.setState({
         groupSelected: "",
@@ -306,24 +242,9 @@ class loctable extends Component {
     let inputnumber = parseInt(this.state.groupinput);
     console.log(inputnumber);
     if (!inputnumber) {
-      let groupparam = {};
-      groupparam.url = "/group";
-      groupparam.method = "get";
-      groupparam.data = {};
-      this.groupRequest(groupparam);
       console.log("값이 없음!");
     } else {
-      let groupparam = {};
-      groupparam.url = "/group";
-      groupparam.method = "get";
-      groupparam.data = {};
-      this.groupRequest(groupparam);
-      let inputarray = [];
-      inputarray = this.props.grouplistdata.filter(
-        (item) => item.GRP_ID === inputnumber
-      );
-      console.log(inputarray);
-      this.props.groupdata(inputarray);
+      console.log("검색 가능!");
     }
   };
   onGroupinputChange = (e) => {
@@ -336,7 +257,7 @@ class loctable extends Component {
     const { classes } = this.props;
     console.log(this.state.groupSelected);
     let rows = [];
-    for (let local of this.props.tabledata) {
+    for (let local of this.props.LOCdata) {
       rows.push(
         createData(
           local.LOC_ID,
@@ -365,7 +286,7 @@ class loctable extends Component {
       return a.LOC_ID - b.LOC_ID;
     });
     let grouprows = [];
-    for (let local of this.props.grouplistdata) {
+    for (let local of this.props.GRPdata) {
       grouprows.push(createGroupData(local.GRP_ID, local.GRP_NM));
     }
     grouprows = grouprows.sort(function (a, b) {
@@ -841,17 +762,4 @@ class loctable extends Component {
   }
 }
 
-let mapStateToProps = (state) => {
-  return {
-    tabledata: state.data,
-    grouplistdata: state.groupdata,
-  };
-};
-
-let mapDispatchtoProps = (dispatch) => ({
-  loaddata: (data) => dispatch(readTableData(data)),
-  groupdata: (data) => dispatch(groupData(data)),
-});
-
-loctable = connect(mapStateToProps, mapDispatchtoProps)(loctable);
-export default withStyles(useStyles)(loctable);
+export default withStyles(useStyles)(LOCtable);
