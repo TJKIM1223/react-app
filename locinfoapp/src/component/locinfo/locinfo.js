@@ -266,6 +266,14 @@ class loctable extends Component {
   onCloseClick = () => {
     console.log("닫기");
   };
+  onAddsaveClick = () => {
+    console.log("추가항목/편집항목 저장");
+    alert("저장했습니다.");
+    this.setState({
+      addstate: false,
+      editstate: false,
+    });
+  };
   onGrouprowClick = (data) => {
     // const checkGroupdata = this.state.groupSelected.indexOf(data.GRP_ID, 0);
     // if (checkGroupdata === -1) {
@@ -730,7 +738,7 @@ class loctable extends Component {
             </div>
           </MuiDialogContent>
           <MuiDialogActions>
-            <Button>저장</Button>
+            <Button onClick={this.onAddsaveClick}>저장</Button>
           </MuiDialogActions>
         </Dialog>
         <Dialog open={this.state.editstate} fullWidth={true} maxWidth="sm">
@@ -825,7 +833,7 @@ class loctable extends Component {
             </div>
           </MuiDialogContent>
           <MuiDialogActions>
-            <Button>저장</Button>
+            <Button onClick={this.onAddsaveClick}>저장</Button>
           </MuiDialogActions>
         </Dialog>
       </div>
